@@ -45594,6 +45594,7 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var textureLoader = new THREE.TextureLoader();
+                textureLoader.crossOrigin = '';
                 textureLoader.load(constants_1.ROOT + "./blenderobj/white.jpg", function (texture) {
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -45606,6 +45607,7 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var textureLoader = new THREE.TextureLoader();
+                textureLoader.crossOrigin = '';
                 textureLoader.load(constants_1.ROOT + "./blenderobj/normal.jpg", function (texture) {
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;

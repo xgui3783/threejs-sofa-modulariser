@@ -82,6 +82,7 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let textureLoader = new THREE.TextureLoader()
+                textureLoader.crossOrigin = ''
                 textureLoader.load(ROOT + "./blenderobj/white.jpg",(texture)=>{
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -94,6 +95,7 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let textureLoader = new THREE.TextureLoader()
+                textureLoader.crossOrigin = ''
                 textureLoader.load(ROOT + "./blenderobj/normal.jpg",(texture)=>{
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
