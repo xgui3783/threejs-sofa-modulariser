@@ -128,5 +128,6 @@ export class KopaViewer{
     }
 }
 
-
-export const kopaViewer = new KopaViewer( document.getElementById('kopa_webgl') )
+document.addEventListener('DOMContentLoaded',()=>{
+    let kopaViewer = new KopaViewer( document.getElementById('kopa_webgl') )
+})

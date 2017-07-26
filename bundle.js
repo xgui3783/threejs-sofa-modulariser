@@ -43800,7 +43800,7 @@ exports.SPOT_ANGLE = 1.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
+exports.ROOT = 'http://www.pandamakes.com.au/examples/kopav5/';
 
 
 /***/ }),
@@ -45519,7 +45519,9 @@ var KopaViewer = (function () {
     return KopaViewer;
 }());
 exports.KopaViewer = KopaViewer;
-exports.kopaViewer = new KopaViewer(document.getElementById('kopa_webgl'));
+document.addEventListener('DOMContentLoaded', function () {
+    var kopaViewer = new KopaViewer(document.getElementById('kopa_webgl'));
+});
 
 
 /***/ }),
