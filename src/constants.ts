@@ -57,4 +57,4 @@ export const SPOT_DECAY = 1
 
 /* root folder for loading assets */
 
-export const ROOT = 'http://www.pandamakes.com.au/examples/kopav5/'
+export const ROOT = 'https://xgui3783.github.io/'
