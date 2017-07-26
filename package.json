@@ -1,0 +1,22 @@
+{
+  "name": "kopa2",
+  "version": "1.0.0",
+  "description": "kopa life webgl component v2 incorporating typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webpack": "./node_modules/.bin/webpack  --progress --colors --watch --display-error-details",
+    "build":"./node_modules/.bin/webpack"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/three": "^0.84.9",
+    "three": "^0.85.2",
+    "three-orbit-controls": "^82.1.0"
+  },
+  "devDependencies": {
+    "three": "^0.85.2",
+    "webpack": "^2.6.1"
+  }
+}
