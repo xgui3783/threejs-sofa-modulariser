@@ -43800,7 +43800,7 @@ exports.SPOT_ANGLE = 1.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'http://www.pandamakes.com.au/examples/kopav5/';
+exports.ROOT = 'http://xgui3783.github.io/';
 
 
 /***/ }),
