@@ -46215,6 +46215,5 @@ module.exports = function( THREE ){
 	return THREE.Mirror
 }
 
-
 /***/ })
 /******/ ]);

@@ -1,82 +1,82 @@
-        body{
-            margin:0;
-            padding:0;
-        }
-        #container
-        {
-            position:relative;
-            width:100%;
-            height:100%;
-        }
-        #kopa_webgl
-        {
-            position:absolute;
-            left:0;
-            top:0;
-            z-index:0;
-            width:100%;
-            height:100%;
-        }
-        #tooltip_anchor
-        {
-            font-family:'arial';
-            padding:7px 15px;
-            position:absolute;
-            min-width: 10vw;
-            min-height: 10vh;
-            z-index:1;
-            left:-9999;
-            background-color:#fff;
-            border:2px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 5px 5px 25px 0 #ddd;
-        }
-        #tooltip_singular
-        {
-            font-family:'arial';
-            padding:7px 15px;
-            position:absolute;
-            min-width: 10vw;
-            min-height: 2vh;
-            z-index:1;
-            left:-9999;
-            background-color:#fff;
-            border:2px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 5px 5px 25px 0 #ddd;
-        }
-        .smaller{
-            color:red;
-            font-weight:100;
-            line-height:1.2em;
-            margin-left:0.5em;
-        }
-        .smaller:hover{
-            cursor:pointer;
-        }
-        .tooltip_int{
-            font-weight:100;
-            line-height:1.2em;
-            margin-left:0.5em;
-        }
-        .tooltip_int.active{
-            font-weight:900;
-        }
-        .tooltip_int.hidden{
-            display:none;
-        }
-        .tooltip_int:hover{
-            cursor:default;
-            font-weight:900;
-        }
-        #trashcan
-        {
-            display:none
-        }
-        .colorEl{
-            min-width:1.5em;
-            min-height:1.5em;
-        }
-        .colorEl:hover{
-            cursor:pointer
-        }
+body{
+margin:0;
+padding:0;
+}
+#container
+{
+position:relative;
+width:1000;
+height:562;
+}
+#kopa_webgl
+{
+position:absolute;
+left:0;
+top:0;
+z-index:0;
+width:100%;
+height:100%;
+}
+#tooltip_anchor
+{
+font-family:'arial';
+padding:7px 15px;
+position:absolute;
+min-width: 10vw;
+min-height: 10vh;
+z-index:1;
+left:-9999;
+background-color:#fff;
+border:2px solid #ddd;
+border-radius: 10px;
+box-shadow: 5px 5px 25px 0 #ddd;
+}
+#tooltip_singular
+{
+font-family:'arial';
+padding:7px 15px;
+position:absolute;
+min-width: 10vw;
+min-height: 2vh;
+z-index:1;
+left:-9999;
+background-color:#fff;
+border:2px solid #ddd;
+border-radius: 10px;
+box-shadow: 5px 5px 25px 0 #ddd;
+}
+.smaller{
+color:red;
+font-weight:100;
+line-height:1.2em;
+margin-left:0.5em;
+}
+.smaller:hover{
+cursor:pointer;
+}
+.tooltip_int{
+font-weight:100;
+line-height:1.2em;
+margin-left:0.5em;
+}
+.tooltip_int.active{
+font-weight:900;
+}
+.tooltip_int.hidden{
+display:none;
+}
+.tooltip_int:hover{
+cursor:default;
+font-weight:900;
+}
+#trashcan
+{
+display:none
+}
+.colorEl{
+min-width:1.5em;
+min-height:1.5em;
+}
+.colorEl:hover{
+cursor:pointer
+}
