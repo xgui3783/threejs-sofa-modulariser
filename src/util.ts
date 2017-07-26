@@ -15,7 +15,7 @@ export class Util{
     mouse : THREE.Vector2 = new THREE.Vector2( -1 , -1 )
     control : any
 
-    tooltip : HTMLElement
+    // tooltip : HTMLElement
 
     constructor(camera:THREE.Camera,domElement:HTMLElement){
         this.camera = camera
@@ -23,10 +23,10 @@ export class Util{
         this.control.autoRotate = false
         this.raycaster = new THREE.Raycaster()
 
-        this.tooltip = document.getElementById('tooltip_anchor')
-        this.tooltip.addEventListener('click',(e)=>{
-            e.stopPropagation()
-        },false)
+        // this.tooltip = document.getElementById('tooltip_anchor')
+        // this.tooltip.addEventListener('click',(e)=>{
+        //     e.stopPropagation()
+        // },false)
     }
 
     /* this event may become obsolete soon */

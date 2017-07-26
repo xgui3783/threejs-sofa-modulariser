@@ -44051,16 +44051,17 @@ var OrbitControls = __webpack_require__(5);
 var constants_1 = __webpack_require__(1);
 var orbitControls = OrbitControls(THREE);
 var Util = (function () {
+    // tooltip : HTMLElement
     function Util(camera, domElement) {
         this.mouse = new THREE.Vector2(-1, -1);
         this.camera = camera;
         this.control = new orbitControls(camera, domElement);
         this.control.autoRotate = false;
         this.raycaster = new THREE.Raycaster();
-        this.tooltip = document.getElementById('tooltip_anchor');
-        this.tooltip.addEventListener('click', function (e) {
-            e.stopPropagation();
-        }, false);
+        // this.tooltip = document.getElementById('tooltip_anchor')
+        // this.tooltip.addEventListener('click',(e)=>{
+        //     e.stopPropagation()
+        // },false)
     }
     /* this event may become obsolete soon */
     Util.prototype.mouseClickEvent = function (canvas, e, modSofa) {
