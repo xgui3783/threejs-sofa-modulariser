@@ -44076,8 +44076,10 @@ var Util = (function () {
         // }
     };
     Util.prototype.mouseMoveEvent = function (canvas, e) {
-        this.mouse.x = e.clientX / canvas.clientWidth * 2 - 1;
-        this.mouse.y = -(e.clientY / canvas.clientHeight * 2) + 1;
+        /* necesssary if the webgl component is not fullscreen and is off center */
+        var rect = canvas.getBoundingClientRect();
+        this.mouse.x = (e.clientX - rect.left) / canvas.clientWidth * 2 - 1;
+        this.mouse.y = -((e.clientY - rect.top) / canvas.clientHeight * 2) + 1;
     };
     return Util;
 }());
