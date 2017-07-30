@@ -155,8 +155,10 @@ export class OnHoverControls{
 
     mouseClickEvent(canvas,e,modsofa:ModifySofaDialog){
         if( !this.sphereOnSelect && this.INTERSECTS.length > 0 ){
-            this.smallerTooltip.style.left = e.clientX
-            this.smallerTooltip.style.top = e.clientY
+            
+            let rect = canvas.getBoundingClientRect()
+            this.smallerTooltip.style.left = ( e.clientX - rect.left ) + 'px'
+            this.smallerTooltip.style.top = ( e.clientY - rect.top ) + 'px'
             this.showToolTip()
             this.sphereOnSelect = true
         }else{
@@ -343,7 +345,7 @@ export class OnHoverControls{
 
     /* dismiss tooltip */
     dismissTooltip(){
-        this.smallerTooltip.style.left = '-9999'
+        this.smallerTooltip.style.left = '-9999px'
         this.sphereOnHover = false
         this.sphereOnSelect = false
     }
