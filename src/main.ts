@@ -129,5 +129,16 @@ export class KopaViewer{
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-    let kopaViewer = new KopaViewer( document.getElementById('kopa_webgl') )
+    if(document.getElementById('kopa_webgl')){
+        /* init viewer */
+        let kopaViewer = new KopaViewer( document.getElementById('kopa_webgl') )
+        /* overlay */
+        document.getElementById('kopa_webgl_cover').addEventListener('click',(ev)=>{
+            document.getElementById('kopa_webgl_cover').remove()
+        })
+        /* bind shop ui button */
+        document.getElementById('shop_ui_test_btn').addEventListener('click',(ev)=>{
+            let testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click()
+        })
+    }
 })

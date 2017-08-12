@@ -43756,8 +43756,8 @@ function CanvasRenderer() {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SOFAWIDTH = 3.57;
-exports.SOFAHEIGHT = 1.55;
+exports.SOFAWIDTH = 3.27;
+exports.SOFAHEIGHT = 1.45;
 exports.INIT_CAMERA_POS = [0, 5, 10];
 exports.PERSPECTIVE_CAMERA_CONFIG = {
     FOV: 60,
@@ -43800,7 +43800,8 @@ exports.SPOT_ANGLE = 1.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
+// export const ROOT = 'https://xgui3783.github.io/'
+exports.ROOT = 'http://localhost/kopa2/';
 
 
 /***/ }),
@@ -45524,7 +45525,18 @@ var KopaViewer = (function () {
 }());
 exports.KopaViewer = KopaViewer;
 document.addEventListener('DOMContentLoaded', function () {
-    var kopaViewer = new KopaViewer(document.getElementById('kopa_webgl'));
+    if (document.getElementById('kopa_webgl')) {
+        /* init viewer */
+        var kopaViewer = new KopaViewer(document.getElementById('kopa_webgl'));
+        /* overlay */
+        document.getElementById('kopa_webgl_cover').addEventListener('click', function (ev) {
+            document.getElementById('kopa_webgl_cover').remove();
+        });
+        /* bind shop ui button */
+        document.getElementById('shop_ui_test_btn').addEventListener('click', function (ev) {
+            var testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click();
+        });
+    }
 });
 
 
@@ -45570,7 +45582,7 @@ var SofaFactory = (function () {
         Promise.all([
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/main_w_uvmap.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/final_sofa.json", function (geometry) {
                     _this.geometry = geometry;
                     resolve();
                 }, function () { }, function (e) {
@@ -45579,7 +45591,7 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/arm_w_uvmap.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/final_armrest.json", function (geometry) {
                     _this.armrestGeometry = geometry;
                     resolve();
                 }, function () { }, function (e) {
@@ -45588,7 +45600,7 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/back_w_uvmap.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/final_backrest.json", function (geometry) {
                     _this.backsupportGeometry = geometry;
                     resolve();
                 }, function () { }, function (e) {

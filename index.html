@@ -12,15 +12,53 @@
             width:100%;
             height:100%;
         }
+        #container #shop_container
+        {
+            visibility: hidden;
+            height:1px;
+            width:1px;
+        }
+        #kopa_webgl_cover{
+            position:absolute;
+            width:100%;
+            height:100%;
+            background-color:rgba(100,100,100,0.3);
+            z-index:100;
+            color:rgb(150,150,150);
+            text-align:center;
+        }
+            #kopa_webgl_cover h3{
+                margin-top:3em;
+                font-size:3em;
+            }
+            #kopa_webgl_cover:hover{
+                cursor:pointer;
+                background-color:rgba(100,100,100,0.7);
+            }
         #kopa_webgl
         {
             position:absolute;
-            left:200;
-            top:200;
             z-index:0;
             width:50%;
             height:50%;
         }
+        
+            #shop_ui{
+                z-index:10;
+                position:absolute;
+                right:10px;
+                top:10px;
+            }
+                #shop_ui span{
+                    padding:10px;
+                    background-color:rgb(255,255,255,0.5);
+                    color:rgb(25,10,10);
+                }
+                #shop_ui span:hover{
+                    background-color:rgb(255,255,255,0.8);
+                    cursor:pointer;
+                }
+
         #tooltip_anchor
         {
             font-family:'arial';
@@ -89,6 +127,14 @@
     <body>
         <div id = "container">
             <div id = "kopa_webgl">
+                <div id = "kopa_webgl_cover">
+                    <h3>Customise your KOPA<h3>
+                </div>
+                <div id = "shop_ui">
+                    <span id = "shop_ui_test_btn">
+                        test button
+                    </span>
+                </div>
             </div>
             <div id = "tooltip_anchor">
                 top <div class = "tooltip_int" id = "sidetop">top</div>
@@ -101,6 +147,31 @@
             </div>
             <div id = "tooltip_singular">
 
+            </div>
+            <div id = "shop_container">
+                <section class="ProductItem-details">
+                    <h1 class="ProductItem-details-title" data-content-field="title">webgl kopa</h1>
+
+                    <div class="product-price"><span class="sqs-money-native">16,000.00</span></div>
+
+                    <div class="product-quantity-input" data-item-id="598e942f6a49633fe3ed03e2">
+                        <div class="quantity-label">Quantity:</div>
+                        <input size="4" max="9999" min="1" value="1" type="number" step="1">
+                    </div>
+
+
+                    <div class="sqs-add-to-cart-button-wrapper" >
+                    <div class="sqs-add-to-cart-button sqs-suppress-edit-mode" data-collection-id="5985bb6303596ea150cb88b6" data-item-id="598e942f6a49633fe3ed03e2" data-product-type="1" data-use-custom-label="false" data-original-label="Add To Cart" id="yui_3_17_2_1_1502516319895_248">
+                        <div class="sqs-add-to-cart-button-inner">Add To Cart</div>
+                    </div>
+                    </div>
+
+
+                    <div class="ProductItem-details-share"><div class="Share sqs-share-buttons" data-item-identifier="598e942f6a49633fe3ed03e2" data-item-path="shop/webglt1">
+
+
+                    </div></div>
+                </section>
             </div>
         </div>
     </body>

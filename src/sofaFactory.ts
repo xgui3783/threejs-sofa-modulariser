@@ -55,7 +55,7 @@ export class SofaFactory {
         Promise.all([
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/main_w_uvmap.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/final_sofa.json",(geometry)=>{
                     this.geometry = geometry
                     resolve()
                 },()=>{},(e)=>{
@@ -64,7 +64,7 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/arm_w_uvmap.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/final_armrest.json",(geometry)=>{
                     this.armrestGeometry = geometry
                     resolve()
                 },()=>{},(e)=>{
@@ -73,7 +73,7 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/back_w_uvmap.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/final_backrest.json",(geometry)=>{
                     this.backsupportGeometry = geometry
                     resolve()
                 },()=>{},(e)=>{

@@ -1,5 +1,5 @@
-export const SOFAWIDTH = 3.57
-export const SOFAHEIGHT = 1.55
+export const SOFAWIDTH = 3.27
+export const SOFAHEIGHT = 1.45
 
 export const INIT_CAMERA_POS = [0,5,10]
 
@@ -57,4 +57,5 @@ export const SPOT_DECAY = 1
 
 /* root folder for loading assets */
 
-export const ROOT = 'https://xgui3783.github.io/'
+// export const ROOT = 'https://xgui3783.github.io/'
+export const ROOT = 'http://localhost/kopa2/'
