@@ -9,9 +9,16 @@ export class SofaFactory {
     sofaLedger : Sofa[]
     geometry : THREE.Geometry
     material : THREE.Material
+    legMaterial : THREE.MeshLambertMaterial
+    pinMaterial : THREE.MeshPhongMaterial
 
     armrestGeometry : THREE.Geometry
     backsupportGeometry : THREE.Geometry
+
+    armrestLegsGeometry : THREE.Geometry
+    backsupportLegsGeometry : THREE.Geometry
+    sofaLegsGeometry : THREE.Geometry
+    sofaPinsGeometry : THREE.Geometry
 
     charcoalMaterial : THREE.Material
     navyMaterial : THREE.Material
@@ -55,7 +62,7 @@ export class SofaFactory {
         Promise.all([
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/final_sofa.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/sofa.json",(geometry)=>{
                     this.geometry = geometry
                     resolve()
                 },()=>{},(e)=>{
@@ -64,7 +71,7 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/final_armrest.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/arm.json",(geometry)=>{
                     this.armrestGeometry = geometry
                     resolve()
                 },()=>{},(e)=>{
@@ -73,8 +80,44 @@ export class SofaFactory {
             }),
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/final_backrest.json",(geometry)=>{
+                mainLoader.load(ROOT + "./blenderobj/backrest.json",(geometry)=>{
                     this.backsupportGeometry = geometry
+                    resolve()
+                },()=>{},(e)=>{
+                    reject(e.message)
+                })
+            }),
+            new Promise((resolve,reject)=>{
+                let mainLoader = new THREE.JSONLoader()
+                mainLoader.load(ROOT + "./blenderobj/sofalegs.json",(geometry)=>{
+                    this.sofaLegsGeometry = geometry
+                    resolve()
+                },()=>{},(e)=>{
+                    reject(e.message)
+                })
+            }),
+            new Promise((resolve,reject)=>{
+                let mainLoader = new THREE.JSONLoader()
+                mainLoader.load(ROOT + "./blenderobj/armlegs.json",(geometry)=>{
+                    this.armrestLegsGeometry = geometry
+                    resolve()
+                },()=>{},(e)=>{
+                    reject(e.message)
+                })
+            }),
+            new Promise((resolve,reject)=>{
+                let mainLoader = new THREE.JSONLoader()
+                mainLoader.load(ROOT + "./blenderobj/backrestlegs.json",(geometry)=>{
+                    this.backsupportLegsGeometry = geometry
+                    resolve()
+                },()=>{},(e)=>{
+                    reject(e.message)
+                })
+            }),
+            new Promise((resolve,reject)=>{
+                let mainLoader = new THREE.JSONLoader()
+                mainLoader.load(ROOT + "./blenderobj/backrestpins.json",(geometry)=>{
+                    this.sofaPinsGeometry = geometry
                     resolve()
                 },()=>{},(e)=>{
                     reject(e.message)
@@ -120,6 +163,14 @@ export class SofaFactory {
             })
             this.material = this.charcoalMaterial
 
+            this.pinMaterial = new THREE.MeshPhongMaterial({
+                color : 0x9f9f9f
+            })
+
+            this.legMaterial = new THREE.MeshLambertMaterial({
+                color : 0x161616
+            })
+
             callback()
         })
 
@@ -142,33 +193,49 @@ export class SofaFactory {
             if( !sofa[position] ){
                 let newMaterial : any = this.material.clone()
                 newMaterial.emissive.setHex(0x000000)
-                let newSofa = new Sofa( this.geometry,newMaterial )
+                let newSofa = new Sofa( this.geometry,newMaterial,this.sofaLegsGeometry,this.legMaterial )
                 
-                newSofa.mesh.castShadow = this.castShadow
+                newSofa.meshes.forEach(mesh=>{
+                    mesh.castShadow = this.castShadow
+                })
 
                 this.sofaLedger.push( newSofa )
                 sofa[position] = newSofa
                 
-                sofa.mesh.add( sofa[position].mesh )
+                sofa[position].meshes.forEach(mesh=>{
+                    sofa.meshes[0].add( mesh )
+                })
 
                 switch( position ){
                     case 'top':{
-                        sofa[position].mesh.position.set(0,0,-SOFAWIDTH)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(0,0,-SOFAWIDTH)
+                        })
                     }break;
                     case 'left':{
-                        sofa[position].mesh.position.set(-SOFAWIDTH,0,0)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(-SOFAWIDTH,0,0)
+                        })
                     }break;
                     case 'bottom':{
-                        sofa[position].mesh.position.set(0,0,SOFAWIDTH)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(0,0,SOFAWIDTH)
+                        })
                     }break;
                     case 'right':{
-                        sofa[position].mesh.position.set(SOFAWIDTH,0,0)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(SOFAWIDTH,0,0)
+                        })
                     }break;
                     case 'mirrortop':{
-                        sofa[position].mesh.position.set(0,0,SOFAWIDTH)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(0,0,SOFAWIDTH)
+                        })
                     }
                     case 'mirrorbottom':{
-                        sofa[position].mesh.position.set(0,0,-SOFAWIDTH)
+                        sofa[position].meshes.forEach(mesh=>{
+                            mesh.position.set(0,0,-SOFAWIDTH)
+                        })
                     }
                 }
 
@@ -177,8 +244,10 @@ export class SofaFactory {
                 throw new Error("This position is already occupied!")
             }
         }else{
-            let newSofa = new Sofa( this.geometry, this.material )
-            newSofa.mesh.castShadow = this.castShadow
+            let newSofa = new Sofa( this.geometry, this.material,this.sofaLegsGeometry,this.legMaterial )
+            newSofa.meshes.forEach(mesh=>{
+                mesh.castShadow = this.castShadow
+            })
             this.sofaLedger.push( newSofa )
             return newSofa
         }
@@ -187,21 +256,30 @@ export class SofaFactory {
     addArmrest(sofa:Sofa,position:string){
         if ( !sofa[position] ){
 
-            sofa[position] = new Armrest(sofa,this.armrestGeometry)
-            sofa[position].mesh.castShadow = true
-            sofa.mesh.add( sofa[position].mesh )
+            sofa[position] = new Armrest(sofa,this.armrestGeometry,this.armrestLegsGeometry,this.legMaterial)
+            
+            sofa[position].meshes.forEach(mesh=>{
+                mesh.castShadow = true
+                sofa.meshes[0].add( mesh )
+            })
 
             switch( position ){
                 case 'top':{
-                    sofa[position].mesh.rotateY(Math.PI/2*3)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI/2*3)
+                    })
                 }break;
                 case 'left':{
                 }break;
                 case 'bottom':{
-                    sofa[position].mesh.rotateY(Math.PI/2)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI/2)
+                    })
                 }break;
                 case 'right':{
-                    sofa[position].mesh.rotateY(Math.PI)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI)
+                    })
                 }break;
             }
 
@@ -212,21 +290,29 @@ export class SofaFactory {
 
     addBacksupport(sofa:Sofa,position:string){
         if ( !sofa[position]){
-            sofa[position] = new Backsupport(sofa,this.backsupportGeometry)
-            sofa[position].mesh.castShadow = true
-            sofa.mesh.add( sofa[position].mesh )
+            sofa[position] = new Backsupport(sofa,this.backsupportGeometry,this.backsupportLegsGeometry,this.legMaterial,this.sofaPinsGeometry,this.pinMaterial)
+            sofa[position].meshes.forEach(mesh=>{
+                mesh.castShadow = true
+                sofa.meshes[0].add( mesh )
+            })
 
             switch( position ){
                 case 'top':{
                 }break;
                 case 'left':{
-                    sofa[position].mesh.rotateY(Math.PI/2)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI/2)
+                    })
                 }break;
                 case 'bottom':{
-                    sofa[position].mesh.rotateY(Math.PI)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI)
+                    })
                 }break;
                 case 'right':{
-                    sofa[position].mesh.rotateY(Math.PI/2*3)
+                    sofa[position].meshes.forEach(mesh=>{
+                        mesh.rotateY(Math.PI/2*3)
+                    })
                 }break;
             }
         }else{
@@ -245,7 +331,9 @@ export class SofaFactory {
             if( sofa[position].constructor.name == 'Sofa' ){
                 this.removeAllSofasFromLedger( sofa[position] )
             }
-            sofa.mesh.remove(sofa[position].mesh)
+            sofa[position].meshes.forEach(mesh=>{
+                sofa.meshes[0].remove( mesh )
+            })
             sofa[position] = null
         }
     }
@@ -267,8 +355,8 @@ export class SofaFactory {
     /* given a mesh, find the Sofa obj in ledger */
     findSofa(mesh:THREE.Object3D):Sofa{
         /* intersection could be an accessory or base sofa */
-        let sofa =  this.sofaLedger.find( sofa => sofa.mesh === mesh )
+        let sofa =  this.sofaLedger.find( sofa => sofa.meshes[0] === mesh )
         
-        return sofa ? sofa : this.sofaLedger.find( sofa => sofa.mesh === mesh.parent )
+        return sofa ? sofa : this.sofaLedger.find( sofa => sofa.meshes[0] === mesh.parent )
     }
 }

@@ -50,6 +50,7 @@ export class KopaViewer{
         this.scene.floor.floor.receiveShadow = true
         this.scene.sofaFactory.castShadow = true
 
+
         this.scene.spot.castShadow = true
         this.scene.spot.shadow.mapSize.width = 1024;
         this.scene.spot.shadow.mapSize.height = 1024;
@@ -71,7 +72,7 @@ export class KopaViewer{
         let counter = 0
 
         this.scene.sofaFactory.sofaLedger.forEach(sofa=>{
-            this.scene.cameraAnchorDest.position.add( sofa.mesh.position )
+            this.scene.cameraAnchorDest.position.add( sofa.meshes[0].position )
             counter ++
         })
         if( counter > 0 ){

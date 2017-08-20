@@ -43766,7 +43766,7 @@ exports.PERSPECTIVE_CAMERA_CONFIG = {
     clipFar: 1024
 };
 exports.HIGHLIGHT_COLOR = 0x111111;
-exports.HIGHLIGHT_COLOR2 = 0xff0000;
+exports.HIGHLIGHT_COLOR2 = 0xec0044;
 exports.WHITE = 0xcacdd2;
 exports.BLACK = 0x222328;
 exports.BROWN = 0xa69d94;
@@ -43782,15 +43782,15 @@ exports.TEXTURE_BUMP = 0.01;
 exports.NODESIZE = 0.1;
 /* renderer color */
 exports.RENDERER_COLOR = 0xFFFFFF;
-exports.SKYBOX_COLOR = 0x030303;
+exports.SKYBOX_COLOR = 0xfafafa;
 // export const SKYBOX_COLOR = 0x161616
 /* floor */
 exports.RENDER_MIRROR = true;
-exports.FLOOR_COLOR = 0x323232;
-exports.MIRROR_COLOR = 0x323232;
+exports.FLOOR_COLOR = 0xe2e2e2;
+exports.MIRROR_COLOR = 0xa0a0a0;
 // export const MIRROR_COLOR = 0x7D7D7D
 /* light */
-exports.AMBIENT_INTENSITY = 0.05;
+exports.AMBIENT_INTENSITY = 0.6;
 exports.SPOT_HEIGHT = 10;
 exports.RENDER_SPOT = false;
 exports.SPOT_COLOR = 0xffffff;
@@ -43800,8 +43800,8 @@ exports.SPOT_ANGLE = 1.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
-// export const ROOT = 'http://localhost/kopa2/' 
+// export const ROOT = 'https://xgui3783.github.io/'
+exports.ROOT = 'http://localhost/kopa2/';
 
 
 /***/ }),
@@ -44026,9 +44026,12 @@ var Scene = (function () {
         this.setupLighting();
     };
     Scene.prototype.addRootSofa = function (pos) {
+        var _this = this;
         var newSofa = this.sofaFactory.makeANewSofa(null, null);
         this.rootSofas.push(newSofa);
-        this.floor.sofaRoot.add(newSofa.mesh);
+        newSofa.meshes.forEach(function (mesh) {
+            _this.floor.sofaRoot.add(mesh);
+        });
         this.sofaFactory.addArmrest(newSofa, 'left');
         this.sofaFactory.addBacksupport(newSofa, 'top');
     };
@@ -44058,6 +44061,8 @@ var Util = (function () {
         this.camera = camera;
         this.control = new orbitControls(camera, domElement);
         this.control.autoRotate = false;
+        this.control.maxDistance = 20;
+        this.control.minDistance = 5;
         this.raycaster = new THREE.Raycaster();
         // this.tooltip = document.getElementById('tooltip_anchor')
         // this.tooltip.addEventListener('click',(e)=>{
@@ -44144,7 +44149,7 @@ var OnHoverControls = (function () {
         if (target) {
             var targetSofa = this.sofaFactory.findSofa(target);
             if (targetSofa) {
-                this.target = targetSofa.mesh;
+                this.target = targetSofa.meshes[0];
                 this.target.add(this.refMesh);
             }
         }
@@ -44307,7 +44312,7 @@ var OnHoverControls = (function () {
                         removeSofa.innerHTML = "remove sofa";
                         removeSofa.className = "smaller";
                         removeSofa.addEventListener('click', function () {
-                            var parentSofa = _this.sofaFactory.findSofa(_this.selectedSofa.mesh.parent);
+                            var parentSofa = _this.sofaFactory.findSofa(_this.selectedSofa.meshes[0].parent);
                             var sides = ['left', 'right', 'top', 'bottom', 'mirrortop', 'mirrorbottom'];
                             /* currently, the root sofa cannot be deleted */
                             if (parentSofa) {
@@ -44336,9 +44341,10 @@ var OnHoverControls = (function () {
         newSofa.mirrorXZ();
         this.sofaFactory.sofaLedger.push(newSofa);
         targetSofa['mirror' + side] = newSofa;
-        targetSofa.mesh.add(newSofa.mesh);
-        /* figuring out the translation */
-        newSofa.mesh.position.set(0, 0, ztranslation);
+        newSofa.meshes.forEach(function (mesh) {
+            targetSofa.meshes[0].add(mesh);
+            mesh.position.set(0, 0, ztranslation);
+        });
     };
     /* dismiss tooltip */
     OnHoverControls.prototype.dismissTooltip = function () {
@@ -45443,7 +45449,7 @@ var KopaViewer = (function () {
             _this.scene.cameraAnchorDest.position.set(0, 0, 0);
             var counter = 0;
             _this.scene.sofaFactory.sofaLedger.forEach(function (sofa) {
-                _this.scene.cameraAnchorDest.position.add(sofa.mesh.position);
+                _this.scene.cameraAnchorDest.position.add(sofa.meshes[0].position);
                 counter++;
             });
             if (counter > 0) {
@@ -45582,7 +45588,7 @@ var SofaFactory = (function () {
         Promise.all([
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/final_sofa.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/sofa.json", function (geometry) {
                     _this.geometry = geometry;
                     resolve();
                 }, function () { }, function (e) {
@@ -45591,7 +45597,7 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/final_armrest.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/arm.json", function (geometry) {
                     _this.armrestGeometry = geometry;
                     resolve();
                 }, function () { }, function (e) {
@@ -45600,8 +45606,44 @@ var SofaFactory = (function () {
             }),
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/final_backrest.json", function (geometry) {
+                mainLoader.load(constants_1.ROOT + "./blenderobj/backrest.json", function (geometry) {
                     _this.backsupportGeometry = geometry;
+                    resolve();
+                }, function () { }, function (e) {
+                    reject(e.message);
+                });
+            }),
+            new Promise(function (resolve, reject) {
+                var mainLoader = new THREE.JSONLoader();
+                mainLoader.load(constants_1.ROOT + "./blenderobj/sofalegs.json", function (geometry) {
+                    _this.sofaLegsGeometry = geometry;
+                    resolve();
+                }, function () { }, function (e) {
+                    reject(e.message);
+                });
+            }),
+            new Promise(function (resolve, reject) {
+                var mainLoader = new THREE.JSONLoader();
+                mainLoader.load(constants_1.ROOT + "./blenderobj/armlegs.json", function (geometry) {
+                    _this.armrestLegsGeometry = geometry;
+                    resolve();
+                }, function () { }, function (e) {
+                    reject(e.message);
+                });
+            }),
+            new Promise(function (resolve, reject) {
+                var mainLoader = new THREE.JSONLoader();
+                mainLoader.load(constants_1.ROOT + "./blenderobj/backrestlegs.json", function (geometry) {
+                    _this.backsupportLegsGeometry = geometry;
+                    resolve();
+                }, function () { }, function (e) {
+                    reject(e.message);
+                });
+            }),
+            new Promise(function (resolve, reject) {
+                var mainLoader = new THREE.JSONLoader();
+                mainLoader.load(constants_1.ROOT + "./blenderobj/backrestpins.json", function (geometry) {
+                    _this.sofaPinsGeometry = geometry;
                     resolve();
                 }, function () { }, function (e) {
                     reject(e.message);
@@ -45643,6 +45685,12 @@ var SofaFactory = (function () {
                 bumpScale: constants_1.TEXTURE_BUMP,
             });
             _this.material = _this.charcoalMaterial;
+            _this.pinMaterial = new THREE.MeshPhongMaterial({
+                color: 0x9f9f9f
+            });
+            _this.legMaterial = new THREE.MeshLambertMaterial({
+                color: 0x161616
+            });
             callback();
         });
         // mainLoader.load("blenderobj/main.json",(geometry)=>{
@@ -45656,41 +45704,58 @@ var SofaFactory = (function () {
         // })
     };
     SofaFactory.prototype.makeANewSofa = function (sofa, position) {
+        var _this = this;
         if (sofa) {
             if (!sofa[position]) {
                 var newMaterial = this.material.clone();
                 newMaterial.emissive.setHex(0x000000);
-                var newSofa = new sofaModel_1.Sofa(this.geometry, newMaterial);
-                newSofa.mesh.castShadow = this.castShadow;
+                var newSofa = new sofaModel_1.Sofa(this.geometry, newMaterial, this.sofaLegsGeometry, this.legMaterial);
+                newSofa.meshes.forEach(function (mesh) {
+                    mesh.castShadow = _this.castShadow;
+                });
                 this.sofaLedger.push(newSofa);
                 sofa[position] = newSofa;
-                sofa.mesh.add(sofa[position].mesh);
+                sofa[position].meshes.forEach(function (mesh) {
+                    sofa.meshes[0].add(mesh);
+                });
                 switch (position) {
                     case 'top':
                         {
-                            sofa[position].mesh.position.set(0, 0, -constants_1.SOFAWIDTH);
+                            sofa[position].meshes.forEach(function (mesh) {
+                                mesh.position.set(0, 0, -constants_1.SOFAWIDTH);
+                            });
                         }
                         break;
                     case 'left':
                         {
-                            sofa[position].mesh.position.set(-constants_1.SOFAWIDTH, 0, 0);
+                            sofa[position].meshes.forEach(function (mesh) {
+                                mesh.position.set(-constants_1.SOFAWIDTH, 0, 0);
+                            });
                         }
                         break;
                     case 'bottom':
                         {
-                            sofa[position].mesh.position.set(0, 0, constants_1.SOFAWIDTH);
+                            sofa[position].meshes.forEach(function (mesh) {
+                                mesh.position.set(0, 0, constants_1.SOFAWIDTH);
+                            });
                         }
                         break;
                     case 'right':
                         {
-                            sofa[position].mesh.position.set(constants_1.SOFAWIDTH, 0, 0);
+                            sofa[position].meshes.forEach(function (mesh) {
+                                mesh.position.set(constants_1.SOFAWIDTH, 0, 0);
+                            });
                         }
                         break;
                     case 'mirrortop': {
-                        sofa[position].mesh.position.set(0, 0, constants_1.SOFAWIDTH);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.position.set(0, 0, constants_1.SOFAWIDTH);
+                        });
                     }
                     case 'mirrorbottom': {
-                        sofa[position].mesh.position.set(0, 0, -constants_1.SOFAWIDTH);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.position.set(0, 0, -constants_1.SOFAWIDTH);
+                        });
                     }
                 }
                 return null;
@@ -45700,21 +45765,27 @@ var SofaFactory = (function () {
             }
         }
         else {
-            var newSofa = new sofaModel_1.Sofa(this.geometry, this.material);
-            newSofa.mesh.castShadow = this.castShadow;
+            var newSofa = new sofaModel_1.Sofa(this.geometry, this.material, this.sofaLegsGeometry, this.legMaterial);
+            newSofa.meshes.forEach(function (mesh) {
+                mesh.castShadow = _this.castShadow;
+            });
             this.sofaLedger.push(newSofa);
             return newSofa;
         }
     };
     SofaFactory.prototype.addArmrest = function (sofa, position) {
         if (!sofa[position]) {
-            sofa[position] = new sofaModel_1.Armrest(sofa, this.armrestGeometry);
-            sofa[position].mesh.castShadow = true;
-            sofa.mesh.add(sofa[position].mesh);
+            sofa[position] = new sofaModel_1.Armrest(sofa, this.armrestGeometry, this.armrestLegsGeometry, this.legMaterial);
+            sofa[position].meshes.forEach(function (mesh) {
+                mesh.castShadow = true;
+                sofa.meshes[0].add(mesh);
+            });
             switch (position) {
                 case 'top':
                     {
-                        sofa[position].mesh.rotateY(Math.PI / 2 * 3);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI / 2 * 3);
+                        });
                     }
                     break;
                 case 'left':
@@ -45723,12 +45794,16 @@ var SofaFactory = (function () {
                     break;
                 case 'bottom':
                     {
-                        sofa[position].mesh.rotateY(Math.PI / 2);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI / 2);
+                        });
                     }
                     break;
                 case 'right':
                     {
-                        sofa[position].mesh.rotateY(Math.PI);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI);
+                        });
                     }
                     break;
             }
@@ -45739,9 +45814,11 @@ var SofaFactory = (function () {
     };
     SofaFactory.prototype.addBacksupport = function (sofa, position) {
         if (!sofa[position]) {
-            sofa[position] = new sofaModel_1.Backsupport(sofa, this.backsupportGeometry);
-            sofa[position].mesh.castShadow = true;
-            sofa.mesh.add(sofa[position].mesh);
+            sofa[position] = new sofaModel_1.Backsupport(sofa, this.backsupportGeometry, this.backsupportLegsGeometry, this.legMaterial, this.sofaPinsGeometry, this.pinMaterial);
+            sofa[position].meshes.forEach(function (mesh) {
+                mesh.castShadow = true;
+                sofa.meshes[0].add(mesh);
+            });
             switch (position) {
                 case 'top':
                     {
@@ -45749,17 +45826,23 @@ var SofaFactory = (function () {
                     break;
                 case 'left':
                     {
-                        sofa[position].mesh.rotateY(Math.PI / 2);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI / 2);
+                        });
                     }
                     break;
                 case 'bottom':
                     {
-                        sofa[position].mesh.rotateY(Math.PI);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI);
+                        });
                     }
                     break;
                 case 'right':
                     {
-                        sofa[position].mesh.rotateY(Math.PI / 2 * 3);
+                        sofa[position].meshes.forEach(function (mesh) {
+                            mesh.rotateY(Math.PI / 2 * 3);
+                        });
                     }
                     break;
             }
@@ -45778,7 +45861,9 @@ var SofaFactory = (function () {
             if (sofa[position].constructor.name == 'Sofa') {
                 this.removeAllSofasFromLedger(sofa[position]);
             }
-            sofa.mesh.remove(sofa[position].mesh);
+            sofa[position].meshes.forEach(function (mesh) {
+                sofa.meshes[0].remove(mesh);
+            });
             sofa[position] = null;
         }
     };
@@ -45799,8 +45884,8 @@ var SofaFactory = (function () {
     /* given a mesh, find the Sofa obj in ledger */
     SofaFactory.prototype.findSofa = function (mesh) {
         /* intersection could be an accessory or base sofa */
-        var sofa = this.sofaLedger.find(function (sofa) { return sofa.mesh === mesh; });
-        return sofa ? sofa : this.sofaLedger.find(function (sofa) { return sofa.mesh === mesh.parent; });
+        var sofa = this.sofaLedger.find(function (sofa) { return sofa.meshes[0] === mesh; });
+        return sofa ? sofa : this.sofaLedger.find(function (sofa) { return sofa.meshes[0] === mesh.parent; });
     };
     return SofaFactory;
 }());
@@ -45826,17 +45911,21 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var THREE = __webpack_require__(0);
 var Sofa = (function () {
-    function Sofa(geometry, material) {
+    function Sofa(geometry, material, legGeometry, legMaterial) {
         this.material = material;
         this.geometry = geometry;
-        this.mesh = new THREE.Mesh(geometry, material);
+        this.legGeometry = legGeometry;
+        this.material = material;
+        this.meshes = [new THREE.Mesh(geometry, this.material), new THREE.Mesh(legGeometry, legMaterial)];
     }
     Sofa.prototype.clone = function (sofaFactory) {
         var _this = this;
         var newSofaGeometry = this.geometry.clone();
         var newSofaMaterial = this.material.clone();
+        var newLegGeometry = this.legGeometry.clone();
+        var newlegMaterial = this.legMaterial.clone();
         newSofaMaterial.emissive.setHex(0x000000);
-        var newSofa = new Sofa(newSofaGeometry, newSofaMaterial);
+        var newSofa = new Sofa(newSofaGeometry, newSofaMaterial, newLegGeometry, newlegMaterial);
         var arrSides = ['top', 'left', 'right', 'bottom', 'cushion'];
         arrSides.forEach(function (side) {
             if (_this[side] && _this[side].constructor.name != 'Sofa') {
@@ -45850,11 +45939,15 @@ var Sofa = (function () {
         var arrSides = ['top', 'left', 'right', 'bottom', 'cushion'];
         var tempSide;
         if (this.top) {
-            this.top.mesh.rotateY(Math.PI);
+            this.top.meshes.forEach(function (mesh) {
+                mesh.rotateY(Math.PI);
+            });
             tempSide = this.top;
         }
         if (this.bottom) {
-            this.bottom.mesh.rotateY(Math.PI);
+            this.bottom.meshes.forEach(function (mesh) {
+                mesh.rotateY(Math.PI);
+            });
             this.top = this.bottom;
             if (tempSide) {
                 this.bottom = tempSide;
@@ -45879,28 +45972,34 @@ var SofaAddon = (function () {
 exports.SofaAddon = SofaAddon;
 var Armrest = (function (_super) {
     __extends(Armrest, _super);
-    function Armrest(sofa, geometry) {
+    function Armrest(sofa, geometry, legGeometry, legMaterial) {
         var _this = _super.call(this, sofa) || this;
         _this.geometry = geometry;
-        _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+        _this.legGeometry = legGeometry;
+        _this.legMaterial = legMaterial;
+        _this.meshes = [new THREE.Mesh(_this.geometry, _this.material), new THREE.Mesh(_this.legGeometry, _this.legMaterial)];
         return _this;
     }
     Armrest.prototype.clone = function (sofa) {
-        return new Armrest(sofa, this.geometry.clone());
+        return new Armrest(sofa, this.geometry.clone(), this.legGeometry.clone(), this.legMaterial.clone());
     };
     return Armrest;
 }(SofaAddon));
 exports.Armrest = Armrest;
 var Backsupport = (function (_super) {
     __extends(Backsupport, _super);
-    function Backsupport(sofa, geometry) {
+    function Backsupport(sofa, geometry, legGeometry, legMaterial, pinGeometry, pinMaterial) {
         var _this = _super.call(this, sofa) || this;
         _this.geometry = geometry;
-        _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+        _this.legGeometry = legGeometry;
+        _this.legMaterial = legMaterial;
+        _this.pinGeometry = pinGeometry;
+        _this.pinMaterial = pinMaterial;
+        _this.meshes = [new THREE.Mesh(_this.geometry, _this.material), new THREE.Mesh(_this.legGeometry, _this.legMaterial), new THREE.Mesh(_this.pinGeometry, _this.pinMaterial)];
         return _this;
     }
     Backsupport.prototype.clone = function (sofa) {
-        return new Backsupport(sofa, this.geometry.clone());
+        return new Backsupport(sofa, this.geometry.clone(), this.legGeometry.clone(), this.legMaterial.clone(), this.pinGeometry.clone(), this.pinMaterial.clone());
     };
     return Backsupport;
 }(SofaAddon));
@@ -45910,7 +46009,7 @@ var Cushion = (function (_super) {
     function Cushion(sofa, geometry) {
         var _this = _super.call(this, sofa) || this;
         _this.geometry = geometry;
-        _this.mesh = new THREE.Mesh(_this.geometry, _this.material);
+        _this.meshes = [new THREE.Mesh(_this.geometry, _this.material)];
         return _this;
     }
     Cushion.prototype.clone = function (sofa) {

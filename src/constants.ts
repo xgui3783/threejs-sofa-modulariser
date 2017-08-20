@@ -11,7 +11,7 @@ export const PERSPECTIVE_CAMERA_CONFIG = {
     }
 
 export const HIGHLIGHT_COLOR = 0x111111
-export const HIGHLIGHT_COLOR2 = 0xff0000
+export const HIGHLIGHT_COLOR2 = 0xec0044
 
 export const WHITE = 0xcacdd2
 export const BLACK = 0x222328
@@ -33,17 +33,17 @@ export const NODESIZE = 0.1
 
 /* renderer color */
 export const RENDERER_COLOR = 0xFFFFFF
-export const SKYBOX_COLOR = 0x030303
+export const SKYBOX_COLOR = 0xfafafa
 // export const SKYBOX_COLOR = 0x161616
 
 /* floor */
 export const RENDER_MIRROR = true
-export const FLOOR_COLOR = 0x323232
-export const MIRROR_COLOR = 0x323232
+export const FLOOR_COLOR = 0xe2e2e2
+export const MIRROR_COLOR = 0xa0a0a0
 // export const MIRROR_COLOR = 0x7D7D7D
 
 /* light */
-export const AMBIENT_INTENSITY = 0.05
+export const AMBIENT_INTENSITY = 0.6
 export const SPOT_HEIGHT = 10
 
 export const RENDER_SPOT = false
@@ -57,5 +57,5 @@ export const SPOT_DECAY = 1
 
 /* root folder for loading assets */
 
-export const ROOT = 'https://xgui3783.github.io/'
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+export const ROOT = 'http://localhost/kopa2/'

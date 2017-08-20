@@ -3,9 +3,12 @@ import {SofaFactory} from "./sofaFactory"
 
 export class Sofa{
 
-    mesh:THREE.Mesh
+    meshes:THREE.Mesh[]
     material:THREE.Material
     geometry:THREE.Geometry
+
+    legGeometry:THREE.Geometry
+    legMaterial:THREE.Material
 
     top:Sofa|SofaAddon
     bottom:Sofa|SofaAddon
@@ -16,19 +19,23 @@ export class Sofa{
     mirrorbottom:Sofa
     cushion:Cushion
     
-    constructor( geometry:THREE.Geometry , material:THREE.Material ){
+    constructor( geometry:THREE.Geometry , material:THREE.Material,legGeometry:THREE.Geometry,legMaterial:THREE.Material ){
         this.material = material
         this.geometry = geometry
-        this.mesh = new THREE.Mesh( geometry, material )
+        this.legGeometry = legGeometry
+        this.material = material
+        this.meshes = [new THREE.Mesh( geometry, this.material ),new THREE.Mesh(legGeometry,legMaterial)]
     }
 
     clone(sofaFactory:SofaFactory):Sofa{
         let newSofaGeometry = this.geometry.clone()
         let newSofaMaterial :any = this.material.clone()
+        let newLegGeometry = this.legGeometry.clone()
+        let newlegMaterial = this.legMaterial.clone()
 
         newSofaMaterial.emissive.setHex(0x000000)
 
-        let newSofa = new Sofa(newSofaGeometry,newSofaMaterial)
+        let newSofa = new Sofa(newSofaGeometry,newSofaMaterial,newLegGeometry,newlegMaterial)
 
         let arrSides = ['top','left','right','bottom','cushion']
         arrSides.forEach(side =>{
@@ -45,12 +52,16 @@ export class Sofa{
 
         let tempSide
         if ( this.top ){
-            this.top.mesh.rotateY(Math.PI)
+            this.top.meshes.forEach(mesh=>{
+                mesh.rotateY(Math.PI)
+            })
             tempSide = this.top
         }
 
         if( this.bottom ){
-            this.bottom.mesh.rotateY(Math.PI)
+            this.bottom.meshes.forEach(mesh=>{
+                mesh.rotateY(Math.PI)
+            })
             this.top = this.bottom
             if( tempSide ){
                 this.bottom = tempSide
@@ -66,9 +77,11 @@ export abstract class SofaAddon{
     
     parent:Sofa
 
+    legGeometry:THREE.Geometry
+    legMaterial:THREE.Material
     geometry:THREE.Geometry
     material:THREE.Material
-    mesh:THREE.Mesh
+    meshes:THREE.Mesh[]
 
     /* defines parent, and inherits material from parent */
     constructor(sofa:Sofa){
@@ -78,24 +91,32 @@ export abstract class SofaAddon{
 }
 
 export class Armrest extends SofaAddon{
-    constructor( sofa:Sofa,geometry:THREE.Geometry ){
+    constructor( sofa:Sofa,geometry:THREE.Geometry,legGeometry:THREE.Geometry,legMaterial:THREE.Material){
         super( sofa )
         this.geometry = geometry
-        this.mesh = new THREE.Mesh( this.geometry,this.material )
+        this.legGeometry = legGeometry
+        this.legMaterial = legMaterial
+        this.meshes = [new THREE.Mesh( this.geometry,this.material ),new THREE.Mesh(this.legGeometry,this.legMaterial)]
     }
     clone(sofa:Sofa):Armrest{
-        return new Armrest(sofa,this.geometry.clone())
+        return new Armrest(sofa,this.geometry.clone(),this.legGeometry.clone(),this.legMaterial.clone())
     }
 }
 
 export class Backsupport extends SofaAddon{
-    constructor( sofa:Sofa,geometry:THREE.Geometry ){
+    pinGeometry : THREE.Geometry
+    pinMaterial : THREE.Material
+    constructor( sofa:Sofa,geometry:THREE.Geometry,legGeometry:THREE.Geometry,legMaterial:THREE.Material,pinGeometry:THREE.Geometry,pinMaterial:THREE.Material ){
         super( sofa )
         this.geometry = geometry
-        this.mesh = new THREE.Mesh( this.geometry,this.material )
+        this.legGeometry = legGeometry
+        this.legMaterial = legMaterial
+        this.pinGeometry = pinGeometry
+        this.pinMaterial = pinMaterial
+        this.meshes = [new THREE.Mesh( this.geometry,this.material ),new THREE.Mesh(this.legGeometry,this.legMaterial),new THREE.Mesh(this.pinGeometry,this.pinMaterial)]
     }
     clone(sofa:Sofa):Backsupport{
-        return new Backsupport(sofa,this.geometry.clone())
+        return new Backsupport(sofa,this.geometry.clone(),this.legGeometry.clone(),this.legMaterial.clone(),this.pinGeometry.clone(),this.pinMaterial.clone())
     }
 }
 
@@ -103,7 +124,7 @@ export class Cushion extends SofaAddon{
     constructor( sofa:Sofa,geometry:THREE.Geometry ){
         super( sofa )
         this.geometry = geometry
-        this.mesh = new THREE.Mesh( this.geometry,this.material )
+        this.meshes = [new THREE.Mesh( this.geometry,this.material )]
     }
     clone(sofa:Sofa):Cushion{
         return new Cushion(sofa,this.geometry.clone())

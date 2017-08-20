@@ -79,7 +79,9 @@ export class Scene{
     addRootSofa(pos:THREE.Vector3){
         let newSofa = this.sofaFactory.makeANewSofa(null,null)
         this.rootSofas.push( newSofa )
-        this.floor.sofaRoot.add( newSofa.mesh )
+        newSofa.meshes.forEach(mesh=>{
+            this.floor.sofaRoot.add( mesh )
+        })
 
         this.sofaFactory.addArmrest(newSofa,'left')
         this.sofaFactory.addBacksupport(newSofa,'top')

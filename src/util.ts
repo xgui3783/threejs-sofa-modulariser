@@ -21,6 +21,9 @@ export class Util{
         this.camera = camera
         this.control = new orbitControls(camera,domElement)
         this.control.autoRotate = false
+        this.control.maxDistance = 20
+        this.control.minDistance = 5
+        
         this.raycaster = new THREE.Raycaster()
 
         // this.tooltip = document.getElementById('tooltip_anchor')
@@ -130,7 +133,7 @@ export class OnHoverControls{
         if( target ){
             let targetSofa = this.sofaFactory.findSofa( target )
             if( targetSofa ){
-                this.target = targetSofa.mesh
+                this.target = targetSofa.meshes[0]
                 this.target.add( this.refMesh )
             }
         }else{
@@ -304,7 +307,7 @@ export class OnHoverControls{
                     removeSofa.innerHTML = `remove sofa`
                     removeSofa.className = `smaller`
                     removeSofa.addEventListener('click',()=>{
-                        let parentSofa = this.sofaFactory.findSofa(this.selectedSofa.mesh.parent)
+                        let parentSofa = this.sofaFactory.findSofa(this.selectedSofa.meshes[0].parent)
                         let sides = ['left','right','top','bottom','mirrortop','mirrorbottom']
                         
                         /* currently, the root sofa cannot be deleted */
@@ -337,10 +340,10 @@ export class OnHoverControls{
         newSofa.mirrorXZ()
         this.sofaFactory.sofaLedger.push(newSofa)
         targetSofa['mirror'+side] = newSofa
-        targetSofa.mesh.add( newSofa.mesh )
-
-        /* figuring out the translation */
-        newSofa.mesh.position.set(0,0,ztranslation) 
+        newSofa.meshes.forEach(mesh=>{
+            targetSofa.meshes[0].add( mesh )
+            mesh.position.set(0,0,ztranslation) 
+        })
     }
 
     /* dismiss tooltip */
