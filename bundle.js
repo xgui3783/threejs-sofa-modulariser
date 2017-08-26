@@ -43800,8 +43800,14 @@ exports.SPOT_ANGLE = 1.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+exports.ROOT = 'http://localhost/kopa2/';
+exports.PRICE = {
+    SOFA: 330,
+    ARMREST: 220,
+    BACKREST: 110,
+    CUSHION: 30
+};
 
 
 /***/ }),
@@ -44247,6 +44253,7 @@ var OnHoverControls = (function () {
                 }
                 this.smallerTooltip.appendChild(mirrorClone);
             }
+            /* nb: to find removal options for cushion, see the else section. crunch time, no time to rewrite logic */
         }
         else {
             this.smallerTooltip.innerHTML = "";
@@ -44295,6 +44302,7 @@ var OnHoverControls = (function () {
                     break;
                 case 'color':
                     {
+                        /* adding menu options to change colours */
                         var rowEl = document.createElement('div');
                         var materialColor_1 = document.createElement('span');
                         // materialColor.innerHTML = 'chnage color'//this.selectedSofa[this.selectedSide].constructor.name
@@ -44308,6 +44316,31 @@ var OnHoverControls = (function () {
                             materialColor_1.appendChild(colorEl);
                         });
                         rowEl.appendChild(materialColor_1);
+                        /* adding menu option to add/remove cushion */
+                        var accNameAddCushionArray = [];
+                        if (this.selectedSofa.hasBackRest() != 0) {
+                            if (this.selectedSofa.cushion) {
+                                var accNameAddCushion = document.createElement('div');
+                                accNameAddCushion.innerHTML = "remove Cushion";
+                                accNameAddCushion.className = "smaller";
+                                accNameAddCushion.addEventListener('click', function () {
+                                    _this.sofaFactory.remove(_this.selectedSofa, 'cushion');
+                                    _this.dismissTooltip();
+                                });
+                                accNameAddCushionArray.push(accNameAddCushion);
+                            }
+                            else {
+                                var accNameAddCushion = document.createElement('div');
+                                accNameAddCushion.innerHTML = "add Cushion";
+                                accNameAddCushion.className = "smaller";
+                                accNameAddCushion.addEventListener('click', function () {
+                                    _this.sofaFactory.addCushion(_this.selectedSofa);
+                                    _this.dismissTooltip();
+                                });
+                                accNameAddCushionArray.push(accNameAddCushion);
+                            }
+                        }
+                        /* adding menu option to remove this sofa */
                         var removeSofa = document.createElement('div');
                         removeSofa.innerHTML = "remove sofa";
                         removeSofa.className = "smaller";
@@ -44321,7 +44354,7 @@ var OnHoverControls = (function () {
                             }
                             _this.dismissTooltip();
                         });
-                        elements = [rowEl, removeSofa];
+                        elements = [rowEl].concat(accNameAddCushionArray, [removeSofa]);
                     }
                     break;
             }
@@ -44351,6 +44384,47 @@ var OnHoverControls = (function () {
         this.smallerTooltip.style.left = '-9999px';
         this.sphereOnHover = false;
         this.sphereOnSelect = false;
+        this.sofaFactory.sofaLedger.forEach(function (sofa) {
+            if (sofa.cushion) {
+                sofa.cushion.reposition();
+            }
+        });
+        this.priceCalc();
+    };
+    OnHoverControls.prototype.priceCalc = function () {
+        var sofaTally = 0, armTally = 0, backTally = 0, cushionTally = 0;
+        var sides = ['left', 'right', 'top', 'bottom', 'cushion'];
+        this.sofaFactory.sofaLedger.forEach(function (sofa) {
+            sofaTally++;
+            for (var _i = 0, sides_1 = sides; _i < sides_1.length; _i++) {
+                var side = sides_1[_i];
+                if (sofa[side]) {
+                    switch (sofa[side].constructor.name) {
+                        case 'Backsupport':
+                            {
+                                backTally++;
+                            }
+                            break;
+                        case 'Armrest':
+                            {
+                                armTally++;
+                            }
+                            break;
+                        case 'Cushion':
+                            {
+                                if (sofa[side].meshes[0].visible) {
+                                    cushionTally++;
+                                }
+                            }
+                            break;
+                    }
+                }
+            }
+        });
+        console.log('sofa', sofaTally, 'arm', armTally, 'back', backTally, 'cushion', cushionTally);
+        var priceTally = "\nPrice Tally:\nSofa x " + sofaTally + ", Armrest x " + armTally + ", Backrest x " + backTally + ", Cushion x " + cushionTally + "\ntotally $" + (sofaTally * constants_1.PRICE.SOFA + armTally * constants_1.PRICE.ARMREST + backTally * constants_1.PRICE.BACKREST + cushionTally * constants_1.PRICE.CUSHION) + "\n        ";
+        var pricePanel = document.getElementById('webgl_overlay_footer');
+        pricePanel.innerHTML = priceTally;
     };
     return OnHoverControls;
 }());
@@ -45537,6 +45611,7 @@ document.addEventListener('DOMContentLoaded', function () {
         /* overlay */
         document.getElementById('kopa_webgl_cover').addEventListener('click', function (ev) {
             document.getElementById('kopa_webgl_cover').remove();
+            document.getElementById('webgl_overlay_footer').style.visibility = 'visible';
         });
         /* bind shop ui button */
         document.getElementById('shop_ui_test_btn').addEventListener('click', function (ev) {
@@ -45650,6 +45725,16 @@ var SofaFactory = (function () {
                 });
             }),
             new Promise(function (resolve, reject) {
+                var mainLoader = new THREE.JSONLoader();
+                mainLoader.load(constants_1.ROOT + "./blenderobj/cushion.json", function (geometry) {
+                    geometry.computeVertexNormals();
+                    _this.cushionGeometry = geometry;
+                    resolve();
+                }, function () { }, function (e) {
+                    reject(e.message);
+                });
+            }),
+            new Promise(function (resolve, reject) {
                 var textureLoader = new THREE.TextureLoader();
                 textureLoader.crossOrigin = '';
                 textureLoader.load(constants_1.ROOT + "./blenderobj/white.jpg", function (texture) {
@@ -45686,7 +45771,8 @@ var SofaFactory = (function () {
             });
             _this.material = _this.charcoalMaterial;
             _this.pinMaterial = new THREE.MeshPhongMaterial({
-                color: 0x9f9f9f
+                color: 0x9f9f9f,
+                specular: 0xcccccc
             });
             _this.legMaterial = new THREE.MeshLambertMaterial({
                 color: 0x161616
@@ -45772,6 +45858,13 @@ var SofaFactory = (function () {
             this.sofaLedger.push(newSofa);
             return newSofa;
         }
+    };
+    SofaFactory.prototype.addCushion = function (sofa) {
+        sofa.cushion = new sofaModel_1.Cushion(sofa, this.cushionGeometry);
+        sofa.cushion.meshes.forEach(function (mesh) {
+            mesh.castShadow = true;
+            sofa.meshes[0].add(mesh);
+        });
     };
     SofaFactory.prototype.addArmrest = function (sofa, position) {
         if (!sofa[position]) {
@@ -45958,6 +46051,16 @@ var Sofa = (function () {
             this.top = undefined;
         }
     };
+    Sofa.prototype.hasBackRest = function () {
+        var pos = 0;
+        if (this.top && this.top.constructor.name == 'Backsupport') {
+            pos++;
+        }
+        if (this.bottom && this.bottom.constructor.name == 'Backsupport') {
+            pos--;
+        }
+        return pos;
+    };
     return Sofa;
 }());
 exports.Sofa = Sofa;
@@ -46014,6 +46117,27 @@ var Cushion = (function (_super) {
     }
     Cushion.prototype.clone = function (sofa) {
         return new Cushion(sofa, this.geometry.clone());
+    };
+    Cushion.prototype.reposition = function () {
+        switch (this.parent.hasBackRest()) {
+            case 0:
+                {
+                    this.meshes[0].visible = false;
+                }
+                break;
+            case 1:
+                {
+                    this.meshes[0].visible = true;
+                    this.meshes[0].setRotationFromAxisAngle(new THREE.Vector3(0, 0, 1), 0);
+                }
+                break;
+            case -1:
+                {
+                    this.meshes[0].visible = true;
+                    this.meshes[0].setRotationFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
+                }
+                break;
+        }
     };
     return Cushion;
 }(SofaAddon));

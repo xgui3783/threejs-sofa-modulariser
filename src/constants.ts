@@ -57,5 +57,12 @@ export const SPOT_DECAY = 1
 
 /* root folder for loading assets */
 
-export const ROOT = 'https://xgui3783.github.io/'
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+export const ROOT = 'http://localhost/kopa2/'
+
+export const PRICE = {
+    SOFA : 330,
+    ARMREST : 220,
+    BACKREST : 110,
+    CUSHION : 30
+}

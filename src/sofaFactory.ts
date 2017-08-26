@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { Sofa,Armrest,Backsupport } from "./sofaModel"
+import { Sofa,Armrest,Backsupport,Cushion } from "./sofaModel"
 import { ROOT,SOFAWIDTH,WHITE,CHARCOAL,NAVY,LIGHTGRAY,BEIGE,TEXTURE_WRAPS,TEXTURE_WRAPT,TEXTURE_BUMP } from "./constants"
 
 export class SofaFactory {
@@ -19,6 +19,7 @@ export class SofaFactory {
     backsupportLegsGeometry : THREE.Geometry
     sofaLegsGeometry : THREE.Geometry
     sofaPinsGeometry : THREE.Geometry
+    cushionGeometry : THREE.Geometry
 
     charcoalMaterial : THREE.Material
     navyMaterial : THREE.Material
@@ -124,6 +125,16 @@ export class SofaFactory {
                 })
             }),
             new Promise((resolve,reject)=>{
+                let mainLoader = new THREE.JSONLoader()
+                mainLoader.load(ROOT + "./blenderobj/cushion.json",(geometry)=>{
+                    geometry.computeVertexNormals()
+                    this.cushionGeometry = geometry
+                    resolve()
+                },()=>{},(e)=>{
+                    reject(e.message)
+                })
+            }),
+            new Promise((resolve,reject)=>{
                 let textureLoader = new THREE.TextureLoader()
                 textureLoader.crossOrigin = ''
                 textureLoader.load(ROOT + "./blenderobj/white.jpg",(texture)=>{
@@ -164,7 +175,8 @@ export class SofaFactory {
             this.material = this.charcoalMaterial
 
             this.pinMaterial = new THREE.MeshPhongMaterial({
-                color : 0x9f9f9f
+                color : 0x9f9f9f,
+                specular : 0xcccccc
             })
 
             this.legMaterial = new THREE.MeshLambertMaterial({
@@ -251,6 +263,14 @@ export class SofaFactory {
             this.sofaLedger.push( newSofa )
             return newSofa
         }
+    }
+
+    addCushion(sofa:Sofa){
+        sofa.cushion = new Cushion(sofa,this.cushionGeometry)
+        sofa.cushion.meshes.forEach(mesh=>{
+            mesh.castShadow = true
+            sofa.meshes[0].add( mesh )
+        })
     }
 
     addArmrest(sofa:Sofa,position:string){

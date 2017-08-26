@@ -4,7 +4,7 @@ import { Scene } from "./scene"
 import { SofaFactory } from "./sofaFactory"
 import { Sofa } from "./sofaModel"
 import { ModifySofaDialog } from "./modSofa"
-import { SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
+import { PRICE,SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
 
 let orbitControls = OrbitControls( THREE )
 
@@ -240,6 +240,8 @@ export class OnHoverControls{
                 }
                 this.smallerTooltip.appendChild(mirrorClone)
             }
+
+            /* nb: to find removal options for cushion, see the else section. crunch time, no time to rewrite logic */
         }else{
             this.smallerTooltip.innerHTML = ``
             let accElement = document.createElement('div')
@@ -287,6 +289,8 @@ export class OnHoverControls{
 
                 }break;
                 case 'color':{
+
+                    /* adding menu options to change colours */
                     let rowEl = document.createElement('div')
 
                     let materialColor = document.createElement('span')
@@ -303,6 +307,31 @@ export class OnHoverControls{
                     })
                     rowEl.appendChild(materialColor)
 
+                    /* adding menu option to add/remove cushion */
+                    let accNameAddCushionArray = []
+                    if( this.selectedSofa.hasBackRest() != 0 ){
+                        if(this.selectedSofa.cushion){
+                            let accNameAddCushion = document.createElement('div')
+                            accNameAddCushion.innerHTML = `remove Cushion`
+                            accNameAddCushion.className = `smaller`
+                            accNameAddCushion.addEventListener('click',()=>{
+                                this.sofaFactory.remove(this.selectedSofa,'cushion')
+                                this.dismissTooltip()
+                            })
+                            accNameAddCushionArray.push( accNameAddCushion )
+                        }else{
+                            let accNameAddCushion = document.createElement('div')
+                            accNameAddCushion.innerHTML = `add Cushion`
+                            accNameAddCushion.className = `smaller`
+                            accNameAddCushion.addEventListener('click',()=>{
+                                this.sofaFactory.addCushion(this.selectedSofa)
+                                this.dismissTooltip()
+                            })
+                            accNameAddCushionArray.push( accNameAddCushion )
+                        }
+                    }
+
+                    /* adding menu option to remove this sofa */
                     let removeSofa = document.createElement('div')
                     removeSofa.innerHTML = `remove sofa`
                     removeSofa.className = `smaller`
@@ -318,7 +347,8 @@ export class OnHoverControls{
                         this.dismissTooltip()
                     })
 
-                    elements = [rowEl,removeSofa]
+                    elements = [rowEl,...accNameAddCushionArray,removeSofa]
+
                 }break;
             }
             elements.forEach(el => accElement.appendChild(el))
@@ -351,5 +381,45 @@ export class OnHoverControls{
         this.smallerTooltip.style.left = '-9999px'
         this.sphereOnHover = false
         this.sphereOnSelect = false
+
+        this.sofaFactory.sofaLedger.forEach(sofa=>{
+            if(sofa.cushion){
+                sofa.cushion.reposition()
+            }
+        })
+        this.priceCalc()
+    }
+
+    priceCalc(){
+        let sofaTally = 0, armTally = 0, backTally = 0, cushionTally = 0
+        let sides = ['left','right','top','bottom','cushion']
+        this.sofaFactory.sofaLedger.forEach(sofa=>{
+            sofaTally ++
+            for(let side of sides){
+                if (sofa[side]){
+                    switch(sofa[side].constructor.name){
+                        case 'Backsupport':{
+                            backTally ++
+                        }break;
+                        case 'Armrest':{
+                            armTally ++
+                        }break;
+                        case 'Cushion':{
+                            if (sofa[side].meshes[0].visible){
+                                cushionTally ++
+                            }
+                        }break;
+                    }
+                }
+            }
+        })
+        console.log('sofa',sofaTally,'arm',armTally,'back',backTally,'cushion',cushionTally)
+        let priceTally = `
+Price Tally:
+Sofa x ${sofaTally}, Armrest x ${armTally}, Backrest x ${backTally}, Cushion x ${cushionTally}
+totally $${sofaTally*PRICE.SOFA + armTally*PRICE.ARMREST + backTally*PRICE.BACKREST + cushionTally * PRICE.CUSHION}
+        `
+        let pricePanel = document.getElementById('webgl_overlay_footer')
+        pricePanel.innerHTML = priceTally
     }
 }

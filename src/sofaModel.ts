@@ -71,6 +71,17 @@ export class Sofa{
             this.top = undefined
         }
     }
+
+    hasBackRest():number{
+        let pos = 0
+        if ( this.top && this.top.constructor.name == 'Backsupport' ){
+            pos ++
+        }
+        if (this.bottom && this.bottom.constructor.name == 'Backsupport' ){
+            pos --
+        }
+        return pos
+    }
 }
 
 export abstract class SofaAddon{
@@ -128,5 +139,21 @@ export class Cushion extends SofaAddon{
     }
     clone(sofa:Sofa):Cushion{
         return new Cushion(sofa,this.geometry.clone())
+    }
+    reposition(){
+        switch( this.parent.hasBackRest() ){
+            case 0: {
+                this.meshes[0].visible = false; 
+            }break;
+            case 1:{
+                this.meshes[0].visible = true
+                this.meshes[0].setRotationFromAxisAngle(new THREE.Vector3(0,0,1),0)
+            }break;
+            case -1:{
+                this.meshes[0].visible = true 
+                this.meshes[0].setRotationFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI)
+            }
+            break;
+        }
     }
 }

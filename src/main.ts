@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded',()=>{
         /* overlay */
         document.getElementById('kopa_webgl_cover').addEventListener('click',(ev)=>{
             document.getElementById('kopa_webgl_cover').remove()
+            document.getElementById('webgl_overlay_footer').style.visibility = 'visible'
         })
         
         /* bind shop ui button */
