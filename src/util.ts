@@ -4,7 +4,7 @@ import { Scene } from "./scene"
 import { SofaFactory } from "./sofaFactory"
 import { Sofa } from "./sofaModel"
 import { ModifySofaDialog } from "./modSofa"
-import { PRICE,SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
+import { SCALE,PRICE,SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
 
 let orbitControls = OrbitControls( THREE )
 
@@ -62,7 +62,8 @@ export class OnHoverControls{
         blending:THREE.CustomBlending,
         blendEquation:THREE.AddEquation,
         blendSrc:THREE.SrcAlphaFactor,
-        blendDst:THREE.OneMinusSrcAlphaFactor
+        blendDst:THREE.OneMinusSrcAlphaFactor,
+        color : 0x999999
         // blendSrcAlpha:0.3
     })
     solidMaterial : THREE.MeshPhongMaterial = new THREE.MeshPhongMaterial({
@@ -106,17 +107,20 @@ export class OnHoverControls{
         this.refMesh.add( this.topSolid )
         this.refMesh.add( this.bottomSolid )
 
-        this.materialSolid.position.set(0,SOFAHEIGHT,0)
-        this.leftSolid.position.set(-SOFAWIDTH/2,SOFAHEIGHT,0)
-        this.rightSolid.position.set(SOFAWIDTH/2,SOFAHEIGHT,0)
-        this.topSolid.position.set(0,SOFAHEIGHT,-SOFAWIDTH/2)
-        this.bottomSolid.position.set(0,SOFAHEIGHT,SOFAWIDTH/2)
+        let realHeight = SOFAHEIGHT
+        let realWidth = 0.94 * SOFAWIDTH / 2
 
-        this.materialSphere.position.set(0,SOFAHEIGHT,0)
-        this.leftSphere.position.set(-SOFAWIDTH/2,SOFAHEIGHT,0)
-        this.rightSphere.position.set(SOFAWIDTH/2,SOFAHEIGHT,0)
-        this.topSphere.position.set(0,SOFAHEIGHT,-SOFAWIDTH/2)
-        this.bottomSphere.position.set(0,SOFAHEIGHT,SOFAWIDTH/2)  
+        this.materialSolid.position.set(0,realHeight * 1.1 ,0)
+        this.leftSolid.position.set(-realWidth,realHeight,0)
+        this.rightSolid.position.set(realWidth,realHeight,0)
+        this.topSolid.position.set(0,realHeight,-realWidth)
+        this.bottomSolid.position.set(0,realHeight,realWidth)
+
+        this.materialSphere.position.set(0,realHeight * 1.1 ,0)
+        this.leftSphere.position.set(-realWidth,realHeight,0)
+        this.rightSphere.position.set(realWidth,realHeight,0)
+        this.topSphere.position.set(0,realHeight,-realWidth)
+        this.bottomSphere.position.set(0,realHeight,realWidth)  
 
         this.sofaFactory = factory
 
@@ -376,7 +380,6 @@ export class OnHoverControls{
         })
     }
 
-    /* dismiss tooltip */
     dismissTooltip(){
         this.smallerTooltip.style.left = '-9999px'
         this.sphereOnHover = false
@@ -387,7 +390,9 @@ export class OnHoverControls{
                 sofa.cushion.reposition()
             }
         })
-        this.priceCalc()
+        setTimeout(()=>{
+            this.priceCalc()
+        },0)
     }
 
     priceCalc(){
@@ -395,6 +400,9 @@ export class OnHoverControls{
         let sides = ['left','right','top','bottom','cushion']
         this.sofaFactory.sofaLedger.forEach(sofa=>{
             sofaTally ++
+            // to export colours too, use:
+            // let material:any = sofa.material
+            // material.color.r / material.color.g material.color.b
             for(let side of sides){
                 if (sofa[side]){
                     switch(sofa[side].constructor.name){
@@ -413,13 +421,22 @@ export class OnHoverControls{
                 }
             }
         })
-        console.log('sofa',sofaTally,'arm',armTally,'back',backTally,'cushion',cushionTally)
         let priceTally = `
-Price Tally:
-Sofa x ${sofaTally}, Armrest x ${armTally}, Backrest x ${backTally}, Cushion x ${cushionTally}
-totally $${sofaTally*PRICE.SOFA + armTally*PRICE.ARMREST + backTally*PRICE.BACKREST + cushionTally * PRICE.CUSHION}
+Price Tally:<br />
+Sofa x ${sofaTally}, Armrest x ${armTally}, Backrest x ${backTally}, Cushion x ${cushionTally} <br />
+totally $${sofaTally*PRICE.SOFA + armTally*PRICE.ARMREST + backTally*PRICE.BACKREST + cushionTally * PRICE.CUSHION}<br /><br />
         `
-        let pricePanel = document.getElementById('webgl_overlay_footer')
-        pricePanel.innerHTML = priceTally
+        
+        let boundingBox = new THREE.Box3().setFromObject(this.sofaFactory.sofaLedger[0].meshes[0])
+        let width = Math.round((boundingBox.max.x - boundingBox.min.x) * SCALE)
+        let height = Math.round((boundingBox.max.y - boundingBox.min.y) * SCALE)
+        let depth = Math.round((boundingBox.max.z - boundingBox.min.z) * SCALE)
+
+        let dimension = `
+Estimated dimension: (cm) <br />
+${width} x ${depth} x ${height}
+        `
+        let pricePanel = document.getElementById('webgl_info')
+        pricePanel.innerHTML = priceTally + dimension
     }
 }

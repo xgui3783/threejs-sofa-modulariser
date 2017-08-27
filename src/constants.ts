@@ -66,3 +66,5 @@ export const PRICE = {
     BACKREST : 110,
     CUSHION : 30
 }
+
+export const SCALE = 300

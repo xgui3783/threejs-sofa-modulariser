@@ -9,11 +9,32 @@
         {
             background-color:rgba(236,0,68,0.5);
             width:100%;
-            height: 100px;
+            height: 110px;
             overflow:hidden;
             position: absolute;
             bottom:0px;
             visibility: hidden;
+        }
+        #webgl_info
+        {
+            position: absolute;
+            height: 100%;
+            left:0px;
+        }
+        #webgl_reserve_now
+        {
+            position: absolute;
+            height:100%;
+            width:140px;
+            right:0px;
+        }
+        #webgl_add_to_cart
+        {
+            position: absolute;
+            right: 0px;
+            top : 70px;
+            height:100%;
+            width:140px;
         }
         #container #shop_container
         {

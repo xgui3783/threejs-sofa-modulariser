@@ -43808,6 +43808,7 @@ exports.PRICE = {
     BACKREST: 110,
     CUSHION: 30
 };
+exports.SCALE = 300;
 
 
 /***/ }),
@@ -44105,7 +44106,8 @@ var OnHoverControls = (function () {
             blending: THREE.CustomBlending,
             blendEquation: THREE.AddEquation,
             blendSrc: THREE.SrcAlphaFactor,
-            blendDst: THREE.OneMinusSrcAlphaFactor
+            blendDst: THREE.OneMinusSrcAlphaFactor,
+            color: 0x999999
             // blendSrcAlpha:0.3
         });
         this.solidMaterial = new THREE.MeshPhongMaterial({});
@@ -44134,16 +44136,18 @@ var OnHoverControls = (function () {
         this.refMesh.add(this.rightSolid);
         this.refMesh.add(this.topSolid);
         this.refMesh.add(this.bottomSolid);
-        this.materialSolid.position.set(0, constants_1.SOFAHEIGHT, 0);
-        this.leftSolid.position.set(-constants_1.SOFAWIDTH / 2, constants_1.SOFAHEIGHT, 0);
-        this.rightSolid.position.set(constants_1.SOFAWIDTH / 2, constants_1.SOFAHEIGHT, 0);
-        this.topSolid.position.set(0, constants_1.SOFAHEIGHT, -constants_1.SOFAWIDTH / 2);
-        this.bottomSolid.position.set(0, constants_1.SOFAHEIGHT, constants_1.SOFAWIDTH / 2);
-        this.materialSphere.position.set(0, constants_1.SOFAHEIGHT, 0);
-        this.leftSphere.position.set(-constants_1.SOFAWIDTH / 2, constants_1.SOFAHEIGHT, 0);
-        this.rightSphere.position.set(constants_1.SOFAWIDTH / 2, constants_1.SOFAHEIGHT, 0);
-        this.topSphere.position.set(0, constants_1.SOFAHEIGHT, -constants_1.SOFAWIDTH / 2);
-        this.bottomSphere.position.set(0, constants_1.SOFAHEIGHT, constants_1.SOFAWIDTH / 2);
+        var realHeight = constants_1.SOFAHEIGHT;
+        var realWidth = 0.94 * constants_1.SOFAWIDTH / 2;
+        this.materialSolid.position.set(0, realHeight * 1.1, 0);
+        this.leftSolid.position.set(-realWidth, realHeight, 0);
+        this.rightSolid.position.set(realWidth, realHeight, 0);
+        this.topSolid.position.set(0, realHeight, -realWidth);
+        this.bottomSolid.position.set(0, realHeight, realWidth);
+        this.materialSphere.position.set(0, realHeight * 1.1, 0);
+        this.leftSphere.position.set(-realWidth, realHeight, 0);
+        this.rightSphere.position.set(realWidth, realHeight, 0);
+        this.topSphere.position.set(0, realHeight, -realWidth);
+        this.bottomSphere.position.set(0, realHeight, realWidth);
         this.sofaFactory = factory;
         this.smallerTooltip = document.getElementById('tooltip_singular');
         this.smallerTooltip.addEventListener('click', function (e) { return e.stopPropagation(); });
@@ -44379,8 +44383,8 @@ var OnHoverControls = (function () {
             mesh.position.set(0, 0, ztranslation);
         });
     };
-    /* dismiss tooltip */
     OnHoverControls.prototype.dismissTooltip = function () {
+        var _this = this;
         this.smallerTooltip.style.left = '-9999px';
         this.sphereOnHover = false;
         this.sphereOnSelect = false;
@@ -44389,13 +44393,18 @@ var OnHoverControls = (function () {
                 sofa.cushion.reposition();
             }
         });
-        this.priceCalc();
+        setTimeout(function () {
+            _this.priceCalc();
+        }, 0);
     };
     OnHoverControls.prototype.priceCalc = function () {
         var sofaTally = 0, armTally = 0, backTally = 0, cushionTally = 0;
         var sides = ['left', 'right', 'top', 'bottom', 'cushion'];
         this.sofaFactory.sofaLedger.forEach(function (sofa) {
             sofaTally++;
+            // to export colours too, use:
+            // let material:any = sofa.material
+            // material.color.r / material.color.g material.color.b
             for (var _i = 0, sides_1 = sides; _i < sides_1.length; _i++) {
                 var side = sides_1[_i];
                 if (sofa[side]) {
@@ -44421,10 +44430,14 @@ var OnHoverControls = (function () {
                 }
             }
         });
-        console.log('sofa', sofaTally, 'arm', armTally, 'back', backTally, 'cushion', cushionTally);
-        var priceTally = "\nPrice Tally:\nSofa x " + sofaTally + ", Armrest x " + armTally + ", Backrest x " + backTally + ", Cushion x " + cushionTally + "\ntotally $" + (sofaTally * constants_1.PRICE.SOFA + armTally * constants_1.PRICE.ARMREST + backTally * constants_1.PRICE.BACKREST + cushionTally * constants_1.PRICE.CUSHION) + "\n        ";
-        var pricePanel = document.getElementById('webgl_overlay_footer');
-        pricePanel.innerHTML = priceTally;
+        var priceTally = "\nPrice Tally:<br />\nSofa x " + sofaTally + ", Armrest x " + armTally + ", Backrest x " + backTally + ", Cushion x " + cushionTally + " <br />\ntotally $" + (sofaTally * constants_1.PRICE.SOFA + armTally * constants_1.PRICE.ARMREST + backTally * constants_1.PRICE.BACKREST + cushionTally * constants_1.PRICE.CUSHION) + "<br /><br />\n        ";
+        var boundingBox = new THREE.Box3().setFromObject(this.sofaFactory.sofaLedger[0].meshes[0]);
+        var width = Math.round((boundingBox.max.x - boundingBox.min.x) * constants_1.SCALE);
+        var height = Math.round((boundingBox.max.y - boundingBox.min.y) * constants_1.SCALE);
+        var depth = Math.round((boundingBox.max.z - boundingBox.min.z) * constants_1.SCALE);
+        var dimension = "\nEstimated dimension: (cm) <br />\n" + width + " x " + depth + " x " + height + "\n        ";
+        var pricePanel = document.getElementById('webgl_info');
+        pricePanel.innerHTML = priceTally + dimension;
     };
     return OnHoverControls;
 }());
