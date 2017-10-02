@@ -7,34 +7,39 @@
         }
         #webgl_overlay_footer
         {
-            background-color:rgba(236,0,68,0.5);
-            width:100%;
-            height: 110px;
+            background-color:rgba(200,200,200,0.4);
+            display:block;
+            width:200px;
+            min-height: 100px;
             overflow:hidden;
             position: absolute;
-            bottom:0px;
+            bottom:10%;
+            right:10%;
             visibility: hidden;
         }
         #webgl_info
         {
-            position: absolute;
             height: 100%;
-            left:0px;
+            top:0px;
+            width:80%;
+            margin:10%;
         }
         #webgl_reserve_now
         {
-            position: absolute;
-            height:100%;
-            width:140px;
-            right:0px;
+            display:block;
+            width:80%;
+            margin:10%;
+            padding:5px;
+            text-align:center;
+            box-sizing:border-box;
+            text-transform: uppercase;
+            box-shadow: 0 0 1em 0em rgba(0,0,0,0.3);
+            color:rgb(250,250,250);
+            background-color:rgba(236,0,68,0.5);
         }
-        #webgl_add_to_cart
+        #webgl_reserve_now:hover
         {
-            position: absolute;
-            right: 0px;
-            top : 70px;
-            height:100%;
-            width:140px;
+            cursor:pointer;
         }
         #container #shop_container
         {

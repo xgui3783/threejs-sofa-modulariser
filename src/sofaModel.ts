@@ -117,17 +117,15 @@ export class Armrest extends SofaAddon{
 export class Backsupport extends SofaAddon{
     pinGeometry : THREE.Geometry
     pinMaterial : THREE.Material
-    constructor( sofa:Sofa,geometry:THREE.Geometry,legGeometry:THREE.Geometry,legMaterial:THREE.Material,pinGeometry:THREE.Geometry,pinMaterial:THREE.Material ){
+    constructor( sofa:Sofa,geometry:THREE.Geometry,pinGeometry:THREE.Geometry,pinMaterial:THREE.Material ){
         super( sofa )
         this.geometry = geometry
-        this.legGeometry = legGeometry
-        this.legMaterial = legMaterial
         this.pinGeometry = pinGeometry
         this.pinMaterial = pinMaterial
         this.meshes = [new THREE.Mesh( this.geometry,this.material ),new THREE.Mesh(this.legGeometry,this.legMaterial),new THREE.Mesh(this.pinGeometry,this.pinMaterial)]
     }
     clone(sofa:Sofa):Backsupport{
-        return new Backsupport(sofa,this.geometry.clone(),this.legGeometry.clone(),this.legMaterial.clone(),this.pinGeometry.clone(),this.pinMaterial.clone())
+        return new Backsupport(sofa,this.geometry.clone(),this.pinGeometry.clone(),this.pinMaterial.clone())
     }
 }
 

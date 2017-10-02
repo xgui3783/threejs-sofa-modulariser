@@ -43756,14 +43756,15 @@ function CanvasRenderer() {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SOFAWIDTH = 3.27;
-exports.SOFAHEIGHT = 1.45;
-exports.INIT_CAMERA_POS = [0, 5, 10];
+exports.FACTOR = 11;
+exports.SOFAWIDTH = 3.27 * exports.FACTOR;
+exports.SOFAHEIGHT = 1.45 * exports.FACTOR;
+exports.INIT_CAMERA_POS = [0, 45, 90];
 exports.PERSPECTIVE_CAMERA_CONFIG = {
     FOV: 60,
-    aspectRatio: window.innerWidth / window.innerHeight,
+    aspectRatio: 16 / 9,
     clipNear: 0.125,
-    clipFar: 1024
+    clipFar: 2048
 };
 exports.HIGHLIGHT_COLOR = 0x111111;
 exports.HIGHLIGHT_COLOR2 = 0xec0044;
@@ -43778,8 +43779,8 @@ exports.LIGHTGRAY = 0x848484;
 exports.BEIGE = 0x897d6d;
 exports.TEXTURE_WRAPS = 2;
 exports.TEXTURE_WRAPT = 2;
-exports.TEXTURE_BUMP = 0.01;
-exports.NODESIZE = 0.1;
+exports.TEXTURE_BUMP = 0.1;
+exports.NODESIZE = 0.1 * exports.FACTOR;
 /* renderer color */
 exports.RENDERER_COLOR = 0xFFFFFF;
 exports.SKYBOX_COLOR = 0xfafafa;
@@ -43790,25 +43791,25 @@ exports.FLOOR_COLOR = 0xe2e2e2;
 exports.MIRROR_COLOR = 0xa0a0a0;
 // export const MIRROR_COLOR = 0x7D7D7D
 /* light */
-exports.AMBIENT_INTENSITY = 0.6;
-exports.SPOT_HEIGHT = 10;
+exports.AMBIENT_INTENSITY = 0.3;
+exports.SPOT_HEIGHT = 64;
 exports.RENDER_SPOT = false;
 exports.SPOT_COLOR = 0xffffff;
 exports.SPOT_INTENSITY = 0.5;
-exports.SPOT_DISTANCE = 200;
-exports.SPOT_ANGLE = 1.05;
+exports.SPOT_DISTANCE = 300;
+exports.SPOT_ANGLE = 3.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+exports.ROOT = 'http://localhost/kopa2/';
 exports.PRICE = {
     SOFA: 330,
     ARMREST: 220,
     BACKREST: 110,
     CUSHION: 30
 };
-exports.SCALE = 300;
+exports.SCALE = 1000 / 37 / 11 * exports.FACTOR;
 
 
 /***/ }),
@@ -44068,8 +44069,8 @@ var Util = (function () {
         this.camera = camera;
         this.control = new orbitControls(camera, domElement);
         this.control.autoRotate = false;
-        this.control.maxDistance = 20;
-        this.control.minDistance = 5;
+        this.control.maxDistance = 180;
+        this.control.minDistance = 1;
         this.raycaster = new THREE.Raycaster();
         // this.tooltip = document.getElementById('tooltip_anchor')
         // this.tooltip.addEventListener('click',(e)=>{
@@ -44430,6 +44431,12 @@ var OnHoverControls = (function () {
                 }
             }
         });
+        window['kopa_tally'] = {
+            sofa: sofaTally,
+            arm: armTally,
+            back: backTally,
+            cushion: cushionTally
+        };
         var priceTally = "\nPrice Tally:<br />\nSofa x " + sofaTally + ", Armrest x " + armTally + ", Backrest x " + backTally + ", Cushion x " + cushionTally + " <br />\ntotally $" + (sofaTally * constants_1.PRICE.SOFA + armTally * constants_1.PRICE.ARMREST + backTally * constants_1.PRICE.BACKREST + cushionTally * constants_1.PRICE.CUSHION) + "<br /><br />\n        ";
         var boundingBox = new THREE.Box3().setFromObject(this.sofaFactory.sofaLedger[0].meshes[0]);
         var width = Math.round((boundingBox.max.x - boundingBox.min.x) * constants_1.SCALE);
@@ -45630,6 +45637,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('shop_ui_test_btn').addEventListener('click', function (ev) {
             var testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click();
         });
+        document.getElementById('webgl_reserve_now').addEventListener('click', function () {
+            console.log(window['kopa_tally']);
+        });
     }
 });
 
@@ -45719,15 +45729,15 @@ var SofaFactory = (function () {
                     reject(e.message);
                 });
             }),
-            new Promise(function (resolve, reject) {
-                var mainLoader = new THREE.JSONLoader();
-                mainLoader.load(constants_1.ROOT + "./blenderobj/backrestlegs.json", function (geometry) {
-                    _this.backsupportLegsGeometry = geometry;
-                    resolve();
-                }, function () { }, function (e) {
-                    reject(e.message);
-                });
-            }),
+            // new Promise((resolve,reject)=>{
+            //     let mainLoader = new THREE.JSONLoader()
+            //     mainLoader.load(ROOT + "./blenderobj/backrestlegs.json",(geometry)=>{
+            //         this.backsupportLegsGeometry = geometry
+            //         resolve()
+            //     },()=>{},(e)=>{
+            //         reject(e.message)
+            //     })
+            // }),
             new Promise(function (resolve, reject) {
                 var mainLoader = new THREE.JSONLoader();
                 mainLoader.load(constants_1.ROOT + "./blenderobj/backrestpins.json", function (geometry) {
@@ -45920,7 +45930,7 @@ var SofaFactory = (function () {
     };
     SofaFactory.prototype.addBacksupport = function (sofa, position) {
         if (!sofa[position]) {
-            sofa[position] = new sofaModel_1.Backsupport(sofa, this.backsupportGeometry, this.backsupportLegsGeometry, this.legMaterial, this.sofaPinsGeometry, this.pinMaterial);
+            sofa[position] = new sofaModel_1.Backsupport(sofa, this.backsupportGeometry, this.sofaPinsGeometry, this.pinMaterial);
             sofa[position].meshes.forEach(function (mesh) {
                 mesh.castShadow = true;
                 sofa.meshes[0].add(mesh);
@@ -46104,18 +46114,16 @@ var Armrest = (function (_super) {
 exports.Armrest = Armrest;
 var Backsupport = (function (_super) {
     __extends(Backsupport, _super);
-    function Backsupport(sofa, geometry, legGeometry, legMaterial, pinGeometry, pinMaterial) {
+    function Backsupport(sofa, geometry, pinGeometry, pinMaterial) {
         var _this = _super.call(this, sofa) || this;
         _this.geometry = geometry;
-        _this.legGeometry = legGeometry;
-        _this.legMaterial = legMaterial;
         _this.pinGeometry = pinGeometry;
         _this.pinMaterial = pinMaterial;
         _this.meshes = [new THREE.Mesh(_this.geometry, _this.material), new THREE.Mesh(_this.legGeometry, _this.legMaterial), new THREE.Mesh(_this.pinGeometry, _this.pinMaterial)];
         return _this;
     }
     Backsupport.prototype.clone = function (sofa) {
-        return new Backsupport(sofa, this.geometry.clone(), this.legGeometry.clone(), this.legMaterial.clone(), this.pinGeometry.clone(), this.pinMaterial.clone());
+        return new Backsupport(sofa, this.geometry.clone(), this.pinGeometry.clone(), this.pinMaterial.clone());
     };
     return Backsupport;
 }(SofaAddon));

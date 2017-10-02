@@ -21,8 +21,8 @@ export class Util{
         this.camera = camera
         this.control = new orbitControls(camera,domElement)
         this.control.autoRotate = false
-        this.control.maxDistance = 20
-        this.control.minDistance = 5
+        this.control.maxDistance = 180
+        this.control.minDistance = 1
         
         this.raycaster = new THREE.Raycaster()
 
@@ -421,6 +421,12 @@ export class OnHoverControls{
                 }
             }
         })
+window['kopa_tally'] = {
+    sofa : sofaTally,
+    arm : armTally,
+    back: backTally,
+    cushion:cushionTally
+}
         let priceTally = `
 Price Tally:<br />
 Sofa x ${sofaTally}, Armrest x ${armTally}, Backrest x ${backTally}, Cushion x ${cushionTally} <br />

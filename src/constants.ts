@@ -1,13 +1,14 @@
-export const SOFAWIDTH = 3.27
-export const SOFAHEIGHT = 1.45
+export const FACTOR = 11
+export const SOFAWIDTH = 3.27 * FACTOR
+export const SOFAHEIGHT = 1.45 * FACTOR
 
-export const INIT_CAMERA_POS = [0,5,10]
+export const INIT_CAMERA_POS = [0,45,90]
 
 export const PERSPECTIVE_CAMERA_CONFIG = {
         FOV : 60,
-        aspectRatio : window.innerWidth/window.innerHeight,
+        aspectRatio : 16/9,
         clipNear : 0.125,
-        clipFar : 1024
+        clipFar : 2048
     }
 
 export const HIGHLIGHT_COLOR = 0x111111
@@ -27,9 +28,9 @@ export const BEIGE = 0x897d6d
 export const TEXTURE_WRAPS = 2
 export const TEXTURE_WRAPT = 2
 
-export const TEXTURE_BUMP = 0.01
+export const TEXTURE_BUMP = 0.1
 
-export const NODESIZE = 0.1
+export const NODESIZE = 0.1 * FACTOR
 
 /* renderer color */
 export const RENDERER_COLOR = 0xFFFFFF
@@ -43,15 +44,15 @@ export const MIRROR_COLOR = 0xa0a0a0
 // export const MIRROR_COLOR = 0x7D7D7D
 
 /* light */
-export const AMBIENT_INTENSITY = 0.6
-export const SPOT_HEIGHT = 10
+export const AMBIENT_INTENSITY = 0.3
+export const SPOT_HEIGHT = 64
 
 export const RENDER_SPOT = false
 
 export const SPOT_COLOR = 0xffffff
 export const SPOT_INTENSITY = 0.5
-export const SPOT_DISTANCE = 200
-export const SPOT_ANGLE = 1.05
+export const SPOT_DISTANCE = 300
+export const SPOT_ANGLE = 3.05
 export const SPOT_PENUMBRA = 0.3
 export const SPOT_DECAY = 1
 
@@ -67,4 +68,4 @@ export const PRICE = {
     CUSHION : 30
 }
 
-export const SCALE = 300
+export const SCALE = 1000 / 37 /11 * FACTOR

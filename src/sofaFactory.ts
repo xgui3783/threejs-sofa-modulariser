@@ -106,15 +106,15 @@ export class SofaFactory {
                     reject(e.message)
                 })
             }),
-            new Promise((resolve,reject)=>{
-                let mainLoader = new THREE.JSONLoader()
-                mainLoader.load(ROOT + "./blenderobj/backrestlegs.json",(geometry)=>{
-                    this.backsupportLegsGeometry = geometry
-                    resolve()
-                },()=>{},(e)=>{
-                    reject(e.message)
-                })
-            }),
+            // new Promise((resolve,reject)=>{
+            //     let mainLoader = new THREE.JSONLoader()
+            //     mainLoader.load(ROOT + "./blenderobj/backrestlegs.json",(geometry)=>{
+            //         this.backsupportLegsGeometry = geometry
+            //         resolve()
+            //     },()=>{},(e)=>{
+            //         reject(e.message)
+            //     })
+            // }),
             new Promise((resolve,reject)=>{
                 let mainLoader = new THREE.JSONLoader()
                 mainLoader.load(ROOT + "./blenderobj/backrestpins.json",(geometry)=>{
@@ -310,7 +310,7 @@ export class SofaFactory {
 
     addBacksupport(sofa:Sofa,position:string){
         if ( !sofa[position]){
-            sofa[position] = new Backsupport(sofa,this.backsupportGeometry,this.backsupportLegsGeometry,this.legMaterial,this.sofaPinsGeometry,this.pinMaterial)
+            sofa[position] = new Backsupport(sofa,this.backsupportGeometry,this.sofaPinsGeometry,this.pinMaterial)
             sofa[position].meshes.forEach(mesh=>{
                 mesh.castShadow = true
                 sofa.meshes[0].add( mesh )
