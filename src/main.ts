@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             document.getElementById('webgl_sqsp_add_cushion').click()
 
             const anchor = document.createElement('a')
-            anchor.setAttribute('href','/shop')
+            anchor.setAttribute('href','/cart')
             document.body.appendChild(anchor)
             anchor.click()
             // console.log(window['kopa_tally'])
