@@ -146,10 +146,10 @@ document.addEventListener('DOMContentLoaded',()=>{
         // })
 
         document.getElementById('webgl_reserve_now').addEventListener('click',()=>{
-            (<HTMLInputElement>document.getElementById('webgl_sqsp_sofa')).value = window['kopa_tally'].sofa
-            (<HTMLInputElement>document.getElementById('webgl_sqsp_arm')).value = window['kopa_tally'].arm
-            (<HTMLInputElement>document.getElementById('webgl_sqsp_back')).value = window['kopa_tally'].back
-            (<HTMLInputElement>document.getElementById('webgl_sqsp_cushion')).value = window['kopa_tally'].cushion
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_sofa')).value = window['kopa_tally'].sofa;
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_arm')).value = window['kopa_tally'].arm;
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_back')).value = window['kopa_tally'].back;
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_cushion')).value = window['kopa_tally'].cushion;
 
             document.getElementById('webgl_sqsp_add_sofa').click()
             document.getElementById('webgl_sqsp_add_arm').click()
