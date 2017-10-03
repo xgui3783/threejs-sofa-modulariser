@@ -141,9 +141,9 @@ document.addEventListener('DOMContentLoaded',()=>{
         })
         
         /* bind shop ui button */
-        document.getElementById('shop_ui_test_btn').addEventListener('click',(ev)=>{
-            let testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click()
-        })
+        // document.getElementById('shop_ui_test_btn').addEventListener('click',(ev)=>{
+        //     let testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click()
+        // })
 
         document.getElementById('webgl_reserve_now').addEventListener('click',()=>{
             console.log(window['kopa_tally'])

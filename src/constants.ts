@@ -18,12 +18,18 @@ export const WHITE = 0xcacdd2
 export const BLACK = 0x222328
 export const BROWN = 0xa69d94
 export const PINK = 0xc4a8b6
-export const BLUE = 0x848dac
+export const BLUE_ = 0x848dac
+
+export const CHALK = 0xddd7c9
+export const LIGHTGRAY = 0xa1a1a1
+export const BEIGE = 0x9b8f86
+export const BLUE = 0x1d274b
+export const CHARCOALBLACK = 0x141319
 
 export const CHARCOAL = 0x514d4a
 export const NAVY = 0x343b55
-export const LIGHTGRAY = 0x848484
-export const BEIGE = 0x897d6d
+export const LIGHTGRAY_ = 0x848484
+export const BEIGE_ = 0x897d6d
 
 export const TEXTURE_WRAPS = 2
 export const TEXTURE_WRAPT = 2
@@ -58,8 +64,8 @@ export const SPOT_DECAY = 1
 
 /* root folder for loading assets */
 
-export const ROOT = 'https://xgui3783.github.io/'
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+export const ROOT = 'http://localhost/kopa2/'
 
 export const PRICE = {
     SOFA : 330,

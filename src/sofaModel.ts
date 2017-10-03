@@ -23,6 +23,7 @@ export class Sofa{
         this.material = material
         this.geometry = geometry
         this.legGeometry = legGeometry
+        this.legMaterial = legMaterial
         this.material = material
         this.meshes = [new THREE.Mesh( geometry, this.material ),new THREE.Mesh(legGeometry,legMaterial)]
     }

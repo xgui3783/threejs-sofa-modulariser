@@ -1,6 +1,6 @@
 import * as THREE from "three"
 import { Sofa,Armrest,Backsupport,Cushion } from "./sofaModel"
-import { ROOT,SOFAWIDTH,WHITE,CHARCOAL,NAVY,LIGHTGRAY,BEIGE,TEXTURE_WRAPS,TEXTURE_WRAPT,TEXTURE_BUMP } from "./constants"
+import { CHALK,ROOT,SOFAWIDTH,WHITE,CHARCOAL,NAVY,LIGHTGRAY,BEIGE,TEXTURE_WRAPS,TEXTURE_WRAPT,TEXTURE_BUMP } from "./constants"
 
 export class SofaFactory {
 
@@ -49,13 +49,13 @@ export class SofaFactory {
         })
 
         this.beigeMaterial = new THREE.MeshPhongMaterial({
-            color : BEIGE,
+            color : CHALK,
             side: THREE.DoubleSide,
             vertexColors : THREE.FaceColors
         })
 
         /* load geometry/materials here */
-        this.material = this.charcoalMaterial
+        this.material = this.beigeMaterial
         this.sofaLedger = []
     }
 
@@ -163,7 +163,7 @@ export class SofaFactory {
         ]).then(()=>{
 
             this.charcoalMaterial = new THREE.MeshPhongMaterial({
-                color : WHITE,
+                color : CHALK,
                 side: THREE.DoubleSide,
                 vertexColors : THREE.FaceColors,
                 map : this.texture,

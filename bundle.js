@@ -43772,11 +43772,16 @@ exports.WHITE = 0xcacdd2;
 exports.BLACK = 0x222328;
 exports.BROWN = 0xa69d94;
 exports.PINK = 0xc4a8b6;
-exports.BLUE = 0x848dac;
+exports.BLUE_ = 0x848dac;
+exports.CHALK = 0xddd7c9;
+exports.LIGHTGRAY = 0xa1a1a1;
+exports.BEIGE = 0x9b8f86;
+exports.BLUE = 0x1d274b;
+exports.CHARCOALBLACK = 0x141319;
 exports.CHARCOAL = 0x514d4a;
 exports.NAVY = 0x343b55;
-exports.LIGHTGRAY = 0x848484;
-exports.BEIGE = 0x897d6d;
+exports.LIGHTGRAY_ = 0x848484;
+exports.BEIGE_ = 0x897d6d;
 exports.TEXTURE_WRAPS = 2;
 exports.TEXTURE_WRAPT = 2;
 exports.TEXTURE_BUMP = 0.1;
@@ -43801,8 +43806,8 @@ exports.SPOT_ANGLE = 3.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-exports.ROOT = 'https://xgui3783.github.io/';
-// export const ROOT = 'http://localhost/kopa2/'
+// export const ROOT = 'https://xgui3783.github.io/'
+exports.ROOT = 'http://localhost/kopa2/';
 exports.PRICE = {
     SOFA: 330,
     ARMREST: 220,
@@ -44068,6 +44073,7 @@ var Util = (function () {
         this.mouse = new THREE.Vector2(-1, -1);
         this.camera = camera;
         this.control = new orbitControls(camera, domElement);
+        // this.control.enableZoom = false
         this.control.autoRotate = false;
         this.control.maxDistance = 180;
         this.control.minDistance = 1;
@@ -44311,7 +44317,7 @@ var OnHoverControls = (function () {
                         var rowEl = document.createElement('div');
                         var materialColor_1 = document.createElement('span');
                         // materialColor.innerHTML = 'chnage color'//this.selectedSofa[this.selectedSide].constructor.name
-                        var colors = [constants_1.WHITE, constants_1.BLUE, constants_1.PINK, constants_1.BROWN, constants_1.BLACK];
+                        var colors = [constants_1.CHALK, constants_1.LIGHTGRAY, constants_1.BEIGE, constants_1.BLUE, constants_1.CHARCOALBLACK];
                         colors.forEach(function (color) {
                             var colorEl = document.createElement('span');
                             colorEl.className = "colorEl";
@@ -45634,9 +45640,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('webgl_overlay_footer').style.visibility = 'visible';
         });
         /* bind shop ui button */
-        document.getElementById('shop_ui_test_btn').addEventListener('click', function (ev) {
-            var testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click();
-        });
+        // document.getElementById('shop_ui_test_btn').addEventListener('click',(ev)=>{
+        //     let testbutton = document.getElementById('yui_3_17_2_1_1502516319895_248').click()
+        // })
         document.getElementById('webgl_reserve_now').addEventListener('click', function () {
             console.log(window['kopa_tally']);
         });
@@ -45673,12 +45679,12 @@ var SofaFactory = (function () {
             vertexColors: THREE.FaceColors
         });
         this.beigeMaterial = new THREE.MeshPhongMaterial({
-            color: constants_1.BEIGE,
+            color: constants_1.CHALK,
             side: THREE.DoubleSide,
             vertexColors: THREE.FaceColors
         });
         /* load geometry/materials here */
-        this.material = this.charcoalMaterial;
+        this.material = this.beigeMaterial;
         this.sofaLedger = [];
     }
     SofaFactory.prototype.loadGeometries = function (callback) {
@@ -45785,7 +45791,7 @@ var SofaFactory = (function () {
             })
         ]).then(function () {
             _this.charcoalMaterial = new THREE.MeshPhongMaterial({
-                color: constants_1.WHITE,
+                color: constants_1.CHALK,
                 side: THREE.DoubleSide,
                 vertexColors: THREE.FaceColors,
                 map: _this.texture,
@@ -46031,6 +46037,7 @@ var Sofa = (function () {
         this.material = material;
         this.geometry = geometry;
         this.legGeometry = legGeometry;
+        this.legMaterial = legMaterial;
         this.material = material;
         this.meshes = [new THREE.Mesh(geometry, this.material), new THREE.Mesh(legGeometry, legMaterial)];
     }

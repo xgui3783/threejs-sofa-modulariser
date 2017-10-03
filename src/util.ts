@@ -4,7 +4,7 @@ import { Scene } from "./scene"
 import { SofaFactory } from "./sofaFactory"
 import { Sofa } from "./sofaModel"
 import { ModifySofaDialog } from "./modSofa"
-import { SCALE,PRICE,SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
+import { SCALE,PRICE,SOFAHEIGHT, SOFAWIDTH,HIGHLIGHT_COLOR2,CHARCOALBLACK,CHALK, WHITE,BLACK,BLUE,PINK,BROWN,CHARCOAL,NAVY,BEIGE,LIGHTGRAY,NODESIZE } from "./constants"
 
 let orbitControls = OrbitControls( THREE )
 
@@ -20,6 +20,7 @@ export class Util{
     constructor(camera:THREE.Camera,domElement:HTMLElement){
         this.camera = camera
         this.control = new orbitControls(camera,domElement)
+        // this.control.enableZoom = false
         this.control.autoRotate = false
         this.control.maxDistance = 180
         this.control.minDistance = 1
@@ -300,7 +301,7 @@ export class OnHoverControls{
                     let materialColor = document.createElement('span')
                     // materialColor.innerHTML = 'chnage color'//this.selectedSofa[this.selectedSide].constructor.name
                     
-                    let colors = [WHITE,BLUE,PINK,BROWN,BLACK]
+                    let colors = [CHALK,LIGHTGRAY,BEIGE,BLUE,CHARCOALBLACK]
                     colors.forEach(color=>{
                         let colorEl = document.createElement('span')
                         colorEl.className = `colorEl`
