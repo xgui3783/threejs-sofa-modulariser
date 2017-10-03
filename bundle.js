@@ -43807,8 +43807,8 @@ exports.SPOT_ANGLE = 3.05;
 exports.SPOT_PENUMBRA = 0.3;
 exports.SPOT_DECAY = 1;
 /* root folder for loading assets */
-// export const ROOT = 'https://xgui3783.github.io/'
-exports.ROOT = 'http://localhost/kopa2/';
+exports.ROOT = 'https://xgui3783.github.io/';
+// export const ROOT = 'http://localhost/kopa2/'
 exports.PRICE = {
     SOFA: 330,
     ARMREST: 220,
