@@ -10,6 +10,16 @@
         {
             height:2000px;
         }
+        #webgl_control
+        {
+
+            margin-left:10%;
+            padding-top:20px
+        }
+        #webgl_control_zoomIn:hover,#webgl_control_zoomOut:hover
+        {
+            cursor:pointer;
+        }
         #webgl_overlay_footer
         {
             background-color:rgba(200,200,200,0.4);

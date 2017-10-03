@@ -20,7 +20,7 @@ export class Util{
     constructor(camera:THREE.Camera,domElement:HTMLElement){
         this.camera = camera
         this.control = new orbitControls(camera,domElement)
-        // this.control.enableZoom = false
+        this.control.enableZoom = false
         this.control.autoRotate = false
         this.control.maxDistance = 180
         this.control.minDistance = 1

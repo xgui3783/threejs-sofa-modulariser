@@ -2,7 +2,7 @@ import { Scene } from './scene'
 import * as THREE from "three"
 import { Util, OnHoverControls } from "./util"
 import { ModifySofaDialog } from "./modSofa"
-import { HIGHLIGHT_COLOR,RENDERER_COLOR,RENDER_MIRROR,RENDER_SPOT } from "./constants"
+import { ZOOMFACTOR, HIGHLIGHT_COLOR,RENDERER_COLOR,RENDER_MIRROR,RENDER_SPOT } from "./constants"
 
 export class KopaViewer{
     
@@ -11,7 +11,7 @@ export class KopaViewer{
     renderer : THREE.WebGLRenderer
     scene : Scene
     
-    util : Util
+    public util : Util
     modSofa : ModifySofaDialog
     onHoverControls : OnHoverControls
 
@@ -148,5 +148,22 @@ document.addEventListener('DOMContentLoaded',()=>{
         document.getElementById('webgl_reserve_now').addEventListener('click',()=>{
             console.log(window['kopa_tally'])
         })
+        document.getElementById('webgl_control_zoomIn').addEventListener('click',()=>{
+            console.log(kopaViewer.scene.camera.position,ZOOMFACTOR)            
+            kopaViewer.scene.camera.position.set(
+                kopaViewer.scene.camera.position.x / ZOOMFACTOR,
+                kopaViewer.scene.camera.position.y / ZOOMFACTOR,
+                kopaViewer.scene.camera.position.z / ZOOMFACTOR
+            )
+        })
+        document.getElementById('webgl_control_zoomOut').addEventListener('click',()=>{
+            // kopaViewer.util.control.dollyOut(1.2)
+            kopaViewer.scene.camera.position.set(
+                kopaViewer.scene.camera.position.x * ZOOMFACTOR,
+                kopaViewer.scene.camera.position.y * ZOOMFACTOR,
+                kopaViewer.scene.camera.position.z * ZOOMFACTOR
+            )
+        })
+        window['kopaViewer'] = kopaViewer
     }
 })

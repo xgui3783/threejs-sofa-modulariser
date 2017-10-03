@@ -43759,6 +43759,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FACTOR = 11;
 exports.SOFAWIDTH = 3.27 * exports.FACTOR;
 exports.SOFAHEIGHT = 1.45 * exports.FACTOR;
+exports.ZOOMFACTOR = 1.2;
 exports.INIT_CAMERA_POS = [0, 45, 90];
 exports.PERSPECTIVE_CAMERA_CONFIG = {
     FOV: 60,
@@ -44073,7 +44074,7 @@ var Util = (function () {
         this.mouse = new THREE.Vector2(-1, -1);
         this.camera = camera;
         this.control = new orbitControls(camera, domElement);
-        // this.control.enableZoom = false
+        this.control.enableZoom = false;
         this.control.autoRotate = false;
         this.control.maxDistance = 180;
         this.control.minDistance = 1;
@@ -45633,7 +45634,7 @@ exports.KopaViewer = KopaViewer;
 document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('kopa_webgl')) {
         /* init viewer */
-        var kopaViewer = new KopaViewer(document.getElementById('kopa_webgl'));
+        var kopaViewer_1 = new KopaViewer(document.getElementById('kopa_webgl'));
         /* overlay */
         document.getElementById('kopa_webgl_cover').addEventListener('click', function (ev) {
             document.getElementById('kopa_webgl_cover').remove();
@@ -45646,6 +45647,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('webgl_reserve_now').addEventListener('click', function () {
             console.log(window['kopa_tally']);
         });
+        document.getElementById('webgl_control_zoomIn').addEventListener('click', function () {
+            console.log(kopaViewer_1.scene.camera.position, constants_1.ZOOMFACTOR);
+            kopaViewer_1.scene.camera.position.set(kopaViewer_1.scene.camera.position.x / constants_1.ZOOMFACTOR, kopaViewer_1.scene.camera.position.y / constants_1.ZOOMFACTOR, kopaViewer_1.scene.camera.position.z / constants_1.ZOOMFACTOR);
+        });
+        document.getElementById('webgl_control_zoomOut').addEventListener('click', function () {
+            // kopaViewer.util.control.dollyOut(1.2)
+            kopaViewer_1.scene.camera.position.set(kopaViewer_1.scene.camera.position.x * constants_1.ZOOMFACTOR, kopaViewer_1.scene.camera.position.y * constants_1.ZOOMFACTOR, kopaViewer_1.scene.camera.position.z * constants_1.ZOOMFACTOR);
+        });
+        window['kopaViewer'] = kopaViewer_1;
     }
 });
 

@@ -2,6 +2,8 @@ export const FACTOR = 11
 export const SOFAWIDTH = 3.27 * FACTOR
 export const SOFAHEIGHT = 1.45 * FACTOR
 
+export const ZOOMFACTOR = 1.2
+
 export const INIT_CAMERA_POS = [0,45,90]
 
 export const PERSPECTIVE_CAMERA_CONFIG = {
