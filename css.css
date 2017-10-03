@@ -16,6 +16,10 @@
             margin-left:10%;
             padding-top:20px
         }
+        #webgl_hidden_bar
+        {
+            visibility: hidden;
+        }
         #webgl_control_zoomIn:hover,#webgl_control_zoomOut:hover
         {
             cursor:pointer;

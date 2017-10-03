@@ -146,7 +146,21 @@ document.addEventListener('DOMContentLoaded',()=>{
         // })
 
         document.getElementById('webgl_reserve_now').addEventListener('click',()=>{
-            console.log(window['kopa_tally'])
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_sofa')).value = window['kopa_tally'].sofa
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_arm')).value = window['kopa_tally'].arm
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_back')).value = window['kopa_tally'].back
+            (<HTMLInputElement>document.getElementById('webgl_sqsp_cushion')).value = window['kopa_tally'].cushion
+
+            document.getElementById('webgl_sqsp_add_sofa').click()
+            document.getElementById('webgl_sqsp_add_arm').click()
+            document.getElementById('webgl_sqsp_add_back').click()
+            document.getElementById('webgl_sqsp_add_cushion').click()
+
+            const anchor = document.createElement('a')
+            anchor.setAttribute('href','/shop')
+            document.body.appendChild(anchor)
+            anchor.click()
+            // console.log(window['kopa_tally'])
         })
         document.getElementById('webgl_control_zoomIn').addEventListener('click',()=>{
             console.log(kopaViewer.scene.camera.position,ZOOMFACTOR)            
